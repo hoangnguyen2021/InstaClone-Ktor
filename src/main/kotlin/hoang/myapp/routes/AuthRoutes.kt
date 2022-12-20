@@ -1,4 +1,4 @@
-package hoang.myapp
+package hoang.myapp.routes
 
 import hoang.myapp.data.requests.AuthRequest
 import hoang.myapp.data.responses.AuthResponse

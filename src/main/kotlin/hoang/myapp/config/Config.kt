@@ -1,4 +1,4 @@
-package hoang.myapp.configs
+package hoang.myapp.config
 
 object Config {
     val mongoPw = System.getenv("MONGO_PW")

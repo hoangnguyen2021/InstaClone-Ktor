@@ -1,33 +1,38 @@
 package hoang.myapp
 
-import hoang.myapp.configs.Config
-import hoang.myapp.data.user.MongoUserDataSource
+import hoang.myapp.data.user.UserDataSource
+import hoang.myapp.di.KoinModule
 import io.ktor.server.application.*
 import hoang.myapp.plugins.*
-import hoang.myapp.security.hashing.SHA256HashingService
-import hoang.myapp.security.token.JwtTokenService
+import hoang.myapp.security.hashing.HashingService
 import hoang.myapp.security.token.TokenConfig
-import org.litote.kmongo.coroutine.coroutine
-import org.litote.kmongo.reactivestreams.KMongo
+import hoang.myapp.security.token.TokenService
+import io.ktor.http.*
+import org.koin.core.parameter.parametersOf
+import org.koin.ktor.ext.inject
+import org.koin.ktor.plugin.koin
 
 fun main(args: Array<String>): Unit =
-        io.ktor.server.netty.EngineMain.main(args)
+    io.ktor.server.netty.EngineMain.main(args)
 
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module() {
-    val db = KMongo.createClient(Config.connectionString)
-        .coroutine
-        .getDatabase(Config.dbName)
+    // load KoinModule.appModule
+    koin {
+        modules(KoinModule.appModule)
+    }
 
-    val userDataSource = MongoUserDataSource(db)
-    val tokenService = JwtTokenService()
-    val tokenConfig = TokenConfig(
-        issuer = environment.config.property("jwt.issuer").getString(),
-        audience = environment.config.property("jwt.audience").getString(),
-        expiresIn = 365L * 60L * 60L * 24L * 1000L,
-        secret = System.getenv("JWT_SECRET")
-    )
-    val hashingService = SHA256HashingService()
+    val userDataSource: UserDataSource by inject()
+    val tokenService: TokenService by inject()
+    val tokenConfig: TokenConfig by inject {
+        parametersOf(
+            environment.config.property("jwt.issuer").getString(),
+            environment.config.property("jwt.audience").getString(),
+            365L * 60L * 60L * 24L * 1000L,
+            System.getenv("JWT_SECRET")
+        )
+    }
+    val hashingService: HashingService by inject()
 
     configureSecurity(tokenConfig)
     configureMonitoring()
