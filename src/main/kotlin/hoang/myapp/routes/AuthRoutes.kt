@@ -9,6 +9,7 @@ import hoang.myapp.security.hashing.SaltedHash
 import hoang.myapp.security.token.TokenClaim
 import hoang.myapp.security.token.TokenConfig
 import hoang.myapp.security.token.TokenService
+import hoang.myapp.utils.Validator
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -27,11 +28,12 @@ fun Route.signUp(
             return@post
         }
 
-        val areFieldsBlank = request.username.isBlank() || request.password.isBlank()
-        val isPwTooShort = request.password.length < 8
-
-        if (areFieldsBlank || isPwTooShort) {
-            call.respond(HttpStatusCode.Conflict)
+        if (!Validator.validateUsername(request.username)) {
+            call.respond(HttpStatusCode.BadRequest, "Invalid username")
+            return@post
+        }
+        if (!Validator.validatePassword(request.password)) {
+            call.respond(HttpStatusCode.BadRequest, "Invalid password")
             return@post
         }
 

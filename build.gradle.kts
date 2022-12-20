@@ -34,11 +34,14 @@ dependencies {
     // Ktor Core
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
 
+    // Netty
+    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
+
     // Ktor Auth
     implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jwt-jvm:$ktor_version")
 
-    // Ktor Server Content Negotiation
+    // Ktor Content Negotiation
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
 
     // Ktor Call logging
@@ -47,11 +50,11 @@ dependencies {
     // Kotlinx Serialization
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
 
+    // Ktor Resources
+    implementation("io.ktor:ktor-server-resources:$ktor_version")
+
     // Ktor Websocket
     implementation("io.ktor:ktor-server-websockets-jvm:$ktor_version")
-
-    // Netty
-    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
 
     // Logback Classic Module
     implementation("ch.qos.logback:logback-classic:$logback_version")

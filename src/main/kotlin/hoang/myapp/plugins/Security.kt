@@ -14,7 +14,7 @@ import io.ktor.server.request.*
 fun Application.configureSecurity(config: TokenConfig) {
     authentication {
         jwt {
-            realm = this@configureSecurity.environment.config.property("jwt.realm").getString()
+            realm = config.realm
             verifier(
                 JWT
                     .require(Algorithm.HMAC256(config.secret))
@@ -27,5 +27,4 @@ fun Application.configureSecurity(config: TokenConfig) {
             }
         }
     }
-
 }

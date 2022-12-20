@@ -17,7 +17,6 @@ fun Application.configureRouting(
     tokenService: TokenService,
     tokenConfig: TokenConfig
 ) {
-
     routing {
         signUp(hashingService, userDataSource)
         signIn(hashingService, userDataSource, tokenService, tokenConfig)

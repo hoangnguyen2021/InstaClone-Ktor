@@ -8,6 +8,7 @@ import hoang.myapp.security.hashing.HashingService
 import hoang.myapp.security.token.TokenConfig
 import hoang.myapp.security.token.TokenService
 import io.ktor.http.*
+import io.ktor.server.resources.*
 import org.koin.core.parameter.parametersOf
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.koin
@@ -26,10 +27,11 @@ fun Application.module() {
     val tokenService: TokenService by inject()
     val tokenConfig: TokenConfig by inject {
         parametersOf(
+            System.getenv("JWT_SECRET"),
             environment.config.property("jwt.issuer").getString(),
             environment.config.property("jwt.audience").getString(),
+            environment.config.property("jwt.realm").getString(),
             365L * 60L * 60L * 24L * 1000L,
-            System.getenv("JWT_SECRET")
         )
     }
     val hashingService: HashingService by inject()
@@ -37,6 +39,7 @@ fun Application.module() {
     configureSecurity(tokenConfig)
     configureMonitoring()
     configureSerialization()
+    configureResources()
     configureSockets()
     configureRouting(userDataSource, hashingService, tokenService, tokenConfig)
 }
