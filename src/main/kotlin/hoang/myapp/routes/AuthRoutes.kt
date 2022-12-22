@@ -29,11 +29,17 @@ fun Route.signUp(
         }
 
         if (!Validator.validateUsername(request.username)) {
-            call.respond(HttpStatusCode.BadRequest, "Invalid username")
+            call.respond(
+                HttpStatusCode.BadRequest,
+                "Username must be at 4 characters or longer and contain no whitespace"
+            )
             return@post
         }
         if (!Validator.validatePassword(request.password)) {
-            call.respond(HttpStatusCode.BadRequest, "Invalid password")
+            call.respond(
+                HttpStatusCode.BadRequest,
+                "Password must be at 6 characters or longer and contain at least 1 uppercase character, 1 number, 1 special character, and no whitespace"
+            )
             return@post
         }
 
@@ -67,7 +73,7 @@ fun Route.signIn(
 
         val user = userDataSource.getUserByUsername(request.username)
         if (user == null) {
-            call.respond(HttpStatusCode.Conflict, "Cannot find user in database")
+            call.respond(HttpStatusCode.Conflict, "This username is not registered")
             return@post
         }
 
