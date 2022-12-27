@@ -47,7 +47,8 @@ fun Route.sendVerificationCode(
                 status = verification.status,
                 valid = verification.valid,
                 amount = verification.amount,
-                payee = verification.payee
+                payee = verification.payee,
+                dateCreated = verification.dateCreated
             )
         )
     }
@@ -78,7 +79,8 @@ fun Route.checkVerificationCode(
                 status = verificationCheck.status,
                 valid = verificationCheck.valid,
                 amount = verificationCheck.amount,
-                payee = verificationCheck.payee
+                payee = verificationCheck.payee,
+                dateCreated = verificationCheck.dateCreated
             )
         )
     }
