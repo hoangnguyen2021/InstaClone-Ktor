@@ -1,7 +1,11 @@
 package hoang.myapp.routes
 
+import com.twilio.rest.verify.v2.service.Verification
+import com.twilio.type.PhoneNumber
 import hoang.myapp.data.requests.AuthRequest
 import hoang.myapp.data.responses.AuthResponse
+import hoang.myapp.data.responses.VerificationCheckResponse
+import hoang.myapp.data.responses.VerificationResponse
 import hoang.myapp.data.user.User
 import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.security.hashing.HashingService
@@ -9,6 +13,7 @@ import hoang.myapp.security.hashing.SaltedHash
 import hoang.myapp.security.token.TokenClaim
 import hoang.myapp.security.token.TokenConfig
 import hoang.myapp.security.token.TokenService
+import hoang.myapp.twilio.VerificationService
 import hoang.myapp.utils.Validator
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -17,6 +22,67 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+
+fun Route.sendVerificationCode(
+    verificationService: VerificationService
+) {
+    get("send-verification-code") {
+        val mobileNumber = call.request.queryParameters["mobile-number"]
+        if (mobileNumber == null) {
+            call.respond(HttpStatusCode.BadRequest, "Missing parameters")
+            return@get
+        }
+
+        val phoneNumber = PhoneNumber("+1${mobileNumber}")
+        val verification = verificationService.sendVerificationToken(phoneNumber, Verification.Channel.SMS)
+
+        call.respond(
+            HttpStatusCode.OK,
+            VerificationResponse(
+                sid = verification.sid,
+                serviceSid = verification.serviceSid,
+                accountSid = verification.accountSid,
+                to = verification.to,
+                channel = verification.channel,
+                status = verification.status,
+                valid = verification.valid,
+                amount = verification.amount,
+                payee = verification.payee
+            )
+        )
+    }
+}
+
+fun Route.checkVerificationCode(
+    verificationService: VerificationService
+) {
+    get("check-verification-code") {
+        val mobileNumber = call.request.queryParameters["mobile-number"]
+        val code = call.request.queryParameters["code"]
+        if (mobileNumber == null || code == null) {
+            call.respond(HttpStatusCode.BadRequest, "Missing parameters")
+            return@get
+        }
+
+        val phoneNumber = PhoneNumber("+1${mobileNumber}")
+        val verificationCheck = verificationService.checkVerificationToken(phoneNumber, code)
+
+        call.respond(
+            HttpStatusCode.OK,
+            VerificationCheckResponse(
+                sid = verificationCheck.sid,
+                serviceSid = verificationCheck.serviceSid,
+                accountSid = verificationCheck.accountSid,
+                to = verificationCheck.to,
+                channel = verificationCheck.channel,
+                status = verificationCheck.status,
+                valid = verificationCheck.valid,
+                amount = verificationCheck.amount,
+                payee = verificationCheck.payee
+            )
+        )
+    }
+}
 
 fun Route.signUp(
     hashingService: HashingService,
@@ -55,7 +121,7 @@ fun Route.signUp(
             return@post
         }
 
-        call.respond(HttpStatusCode.OK)
+        call.respond(HttpStatusCode.OK, "Sign up successfully")
     }
 }
 

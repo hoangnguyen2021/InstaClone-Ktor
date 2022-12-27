@@ -8,6 +8,8 @@ import hoang.myapp.security.hashing.SHA256HashingService
 import hoang.myapp.security.token.JwtTokenService
 import hoang.myapp.security.token.TokenConfig
 import hoang.myapp.security.token.TokenService
+import hoang.myapp.twilio.TwilioVerificationService
+import hoang.myapp.twilio.VerificationService
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.CoroutineDatabase
@@ -25,5 +27,6 @@ object KoinModule {
         singleOf<TokenService>(::JwtTokenService)
         singleOf(::TokenConfig)
         singleOf<HashingService>(::SHA256HashingService)
+        singleOf<VerificationService>(::TwilioVerificationService)
     }
 }

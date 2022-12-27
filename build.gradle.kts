@@ -5,6 +5,8 @@ val logback_version: String by project
 val commons_codec_version: String by project
 val koin_ktor_version: String by project
 val koin_annotations_version: String by project
+val kotlinx_coroutines_jdk8_version: String by project
+val twilio_version: String by project
 
 plugins {
     kotlin("jvm") version "1.7.22"
@@ -71,6 +73,12 @@ dependencies {
     implementation("io.insert-koin:koin-logger-slf4j:$koin_ktor_version")
     implementation("io.insert-koin:koin-annotations:$koin_annotations_version")
     ksp("io.insert-koin:koin-ksp-compiler:$koin_annotations_version")
+
+    //
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinx_coroutines_jdk8_version")
+
+    // Twilio
+    implementation("com.twilio.sdk:twilio:$twilio_version")
 
     // Testing
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")

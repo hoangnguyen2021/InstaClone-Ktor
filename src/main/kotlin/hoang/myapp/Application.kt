@@ -1,5 +1,7 @@
 package hoang.myapp
 
+import com.twilio.Twilio
+import hoang.myapp.config.Config
 import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.di.KoinModule
 import io.ktor.server.application.*
@@ -7,6 +9,7 @@ import hoang.myapp.plugins.*
 import hoang.myapp.security.hashing.HashingService
 import hoang.myapp.security.token.TokenConfig
 import hoang.myapp.security.token.TokenService
+import hoang.myapp.twilio.VerificationService
 import io.ktor.http.*
 import io.ktor.server.resources.*
 import org.koin.core.parameter.parametersOf
@@ -22,12 +25,11 @@ fun Application.module() {
     koin {
         modules(KoinModule.appModule)
     }
-
     val userDataSource: UserDataSource by inject()
     val tokenService: TokenService by inject()
     val tokenConfig: TokenConfig by inject {
         parametersOf(
-            System.getenv("JWT_SECRET"),
+            Config.jwtSecret,
             environment.config.property("jwt.issuer").getString(),
             environment.config.property("jwt.audience").getString(),
             environment.config.property("jwt.realm").getString(),
@@ -35,11 +37,13 @@ fun Application.module() {
         )
     }
     val hashingService: HashingService by inject()
+    val verificationService: VerificationService by inject()
+    Twilio.init(Config.twilioUsername, Config.twilioPassword)
 
     configureSecurity(tokenConfig)
     configureMonitoring()
     configureSerialization()
     configureResources()
     configureSockets()
-    configureRouting(userDataSource, hashingService, tokenService, tokenConfig)
+    configureRouting(verificationService, userDataSource, hashingService, tokenService, tokenConfig)
 }
