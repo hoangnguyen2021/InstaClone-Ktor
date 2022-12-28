@@ -1,9 +1,26 @@
 package hoang.myapp.utils
 
-import hoang.myapp.data.requests.AuthRequest
+import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.google.i18n.phonenumbers.Phonenumber
+import com.sanctionco.jmail.JMail
 import java.util.regex.Pattern
 
 object Validator {
+    fun validateMobileNumber(mobileNumber: String?): Boolean {
+        if (mobileNumber.isNullOrEmpty()) return false
+        if (!mobileNumber.isDigitsOnly()) return false
+
+        val phoneNumberUtil = PhoneNumberUtil.getInstance()
+        val number = Phonenumber.PhoneNumber().apply {
+            countryCode = 1
+            nationalNumber = mobileNumber.toLong()
+        }
+        return phoneNumberUtil.isValidNumber(number)
+    }
+
+    fun validateEmailAddress(emailAddress: String?): Boolean {
+        return JMail.isValid(emailAddress)
+    }
     fun validateUsername(username: String?): Boolean {
         if (username.isNullOrEmpty()) return false
 
@@ -30,4 +47,6 @@ object Validator {
         )
         return pattern.matcher(password).matches()
     }
+
+
 }

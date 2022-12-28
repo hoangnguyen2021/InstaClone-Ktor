@@ -1,7 +1,6 @@
 package hoang.myapp.routes
 
 import com.twilio.rest.verify.v2.service.Verification
-import com.twilio.type.PhoneNumber
 import hoang.myapp.data.requests.AuthRequest
 import hoang.myapp.data.responses.AuthResponse
 import hoang.myapp.data.responses.VerificationCheckResponse
@@ -27,30 +26,36 @@ fun Route.sendVerificationCode(
     verificationService: VerificationService
 ) {
     get("send-verification-code") {
-        val mobileNumber = call.request.queryParameters["mobile-number"]
-        if (mobileNumber == null) {
+        val recipient = call.request.queryParameters["recipient"]
+        if (recipient == null) {
             call.respond(HttpStatusCode.BadRequest, "Missing parameters")
             return@get
         }
 
-        val phoneNumber = PhoneNumber("+1${mobileNumber}")
-        val verification = verificationService.sendVerificationToken(phoneNumber, Verification.Channel.SMS)
-
-        call.respond(
-            HttpStatusCode.OK,
-            VerificationResponse(
-                sid = verification.sid,
-                serviceSid = verification.serviceSid,
-                accountSid = verification.accountSid,
-                to = verification.to,
-                channel = verification.channel,
-                status = verification.status,
-                valid = verification.valid,
-                amount = verification.amount,
-                payee = verification.payee,
-                dateCreated = verification.dateCreated
+        if (Validator.validateMobileNumber(recipient) || Validator.validateEmailAddress(recipient)) {
+            val verification =
+                if (Validator.validateMobileNumber(recipient))
+                    verificationService.sendVerificationToken("+1${recipient}", Verification.Channel.SMS)
+                else
+                    verificationService.sendVerificationToken(recipient, Verification.Channel.EMAIL)
+            call.respond(
+                HttpStatusCode.OK,
+                VerificationResponse(
+                    sid = verification.sid,
+                    serviceSid = verification.serviceSid,
+                    accountSid = verification.accountSid,
+                    to = verification.to,
+                    channel = verification.channel,
+                    status = verification.status,
+                    valid = verification.valid,
+                    amount = verification.amount,
+                    payee = verification.payee,
+                    dateCreated = verification.dateCreated
+                )
             )
-        )
+        } else {
+            call.respond(HttpStatusCode.BadRequest, "Invalid parameters")
+        }
     }
 }
 
@@ -58,31 +63,41 @@ fun Route.checkVerificationCode(
     verificationService: VerificationService
 ) {
     get("check-verification-code") {
-        val mobileNumber = call.request.queryParameters["mobile-number"]
-        val code = call.request.queryParameters["code"]
-        if (mobileNumber == null || code == null) {
+        val recipient = call.request.queryParameters["recipient"]
+        val verificationCode = call.request.queryParameters["verification-code"]
+        if (recipient == null || verificationCode == null) {
             call.respond(HttpStatusCode.BadRequest, "Missing parameters")
             return@get
         }
 
-        val phoneNumber = PhoneNumber("+1${mobileNumber}")
-        val verificationCheck = verificationService.checkVerificationToken(phoneNumber, code)
-
-        call.respond(
-            HttpStatusCode.OK,
-            VerificationCheckResponse(
-                sid = verificationCheck.sid,
-                serviceSid = verificationCheck.serviceSid,
-                accountSid = verificationCheck.accountSid,
-                to = verificationCheck.to,
-                channel = verificationCheck.channel,
-                status = verificationCheck.status,
-                valid = verificationCheck.valid,
-                amount = verificationCheck.amount,
-                payee = verificationCheck.payee,
-                dateCreated = verificationCheck.dateCreated
-            )
-        )
+        if (Validator.validateMobileNumber(recipient) || Validator.validateEmailAddress(recipient)) {
+            val verificationCheck =
+                if (Validator.validateMobileNumber(recipient))
+                    verificationService.checkVerificationToken("+1${recipient}", verificationCode)
+                else
+                    verificationService.checkVerificationToken(recipient, verificationCode)
+            if (verificationCheck.status.equals("approved")) {
+                call.respond(
+                    HttpStatusCode.OK,
+                    VerificationCheckResponse(
+                        sid = verificationCheck.sid,
+                        serviceSid = verificationCheck.serviceSid,
+                        accountSid = verificationCheck.accountSid,
+                        to = verificationCheck.to,
+                        channel = verificationCheck.channel,
+                        status = verificationCheck.status,
+                        valid = verificationCheck.valid,
+                        amount = verificationCheck.amount,
+                        payee = verificationCheck.payee,
+                        dateCreated = verificationCheck.dateCreated
+                    )
+                )
+            } else {
+                call.respond(HttpStatusCode.BadRequest, "Wrong verification token")
+            }
+        } else {
+            call.respond(HttpStatusCode.BadRequest, "Invalid parameters")
+        }
     }
 }
 

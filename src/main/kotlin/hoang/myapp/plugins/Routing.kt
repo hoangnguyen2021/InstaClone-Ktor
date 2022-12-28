@@ -17,11 +17,13 @@ fun Application.configureRouting(
     tokenConfig: TokenConfig
 ) {
     routing {
-        sendVerificationCode(verificationService)
-        checkVerificationCode(verificationService)
-        signUp(hashingService, userDataSource)
-        signIn(hashingService, userDataSource, tokenService, tokenConfig)
-        authenticate()
-        getSecretInfo()
+        route("/auth") {
+            sendVerificationCode(verificationService)
+            checkVerificationCode(verificationService)
+            signUp(hashingService, userDataSource)
+            signIn(hashingService, userDataSource, tokenService, tokenConfig)
+            authenticate()
+            getSecretInfo()
+        }
     }
 }

@@ -42,8 +42,9 @@ fun Application.module() {
 
     configureSecurity(tokenConfig)
     configureMonitoring()
+    configureCORS()
     configureSerialization()
     configureResources()
-    configureSockets()
+    //configureSockets()
     configureRouting(verificationService, userDataSource, hashingService, tokenService, tokenConfig)
 }
