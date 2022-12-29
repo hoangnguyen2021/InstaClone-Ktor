@@ -25,12 +25,13 @@ class SendinBlueTransactionalEmailService(
             }
             // java blocking call
             apiInstance.sendTransacEmail(sendSmtpEmail)
-            verificationCodeDataSource.insertVerificationCode(
+            val insertSuccessfully = verificationCodeDataSource.insertVerificationCode(
                 VerificationCode(
                     emailAddress = recipient,
                     code = verificationCode
                 )
             )
+            if (!insertSuccessfully) false
             true
         } catch (e: Exception) {
             false
@@ -41,7 +42,8 @@ class SendinBlueTransactionalEmailService(
         val verificationCode = verificationCodeDataSource.getVerificationCodeByEmailAddress(recipient) ?: return false
 
         return if (tokenToCheck == verificationCode.code) {
-            verificationCodeDataSource.deleteVerificationCodeByEmailAddress(recipient)
+            val deleteSuccessfully = verificationCodeDataSource.deleteVerificationCodeByEmailAddress(recipient)
+            if (!deleteSuccessfully) false
             true
         } else {
             false

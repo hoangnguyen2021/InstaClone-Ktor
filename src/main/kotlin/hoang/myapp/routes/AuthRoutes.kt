@@ -38,7 +38,6 @@ fun Route.sendVerificationCode(
                 else {
                     sendinBlueTransactionalEmailService.sendVerificationToken(recipient)
                 }
-
             if (isSuccessful) {
                 call.respond(HttpStatusCode.OK, "Verification sent")
             } else {
