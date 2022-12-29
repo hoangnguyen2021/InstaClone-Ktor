@@ -11,14 +11,14 @@ import hoang.myapp.security.token.JwtTokenService
 import hoang.myapp.security.token.TokenConfig
 import hoang.myapp.security.token.TokenService
 import hoang.myapp.twilio.TwilioVerificationService
-import hoang.myapp.twilio.VerificationService
+import hoang.myapp.security.verification.VerificationService
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.coroutine.coroutine
 import org.litote.kmongo.reactivestreams.KMongo
-import sendinblue.SendinBlueTransactionalEmailService
+import hoang.myapp.sendinblue.SendinBlueTransactionalEmailService
 
 
 object KoinModule {
@@ -35,7 +35,7 @@ object KoinModule {
         singleOf<HashingService>(::SHA256HashingService)
         single<VerificationService>(named("twilio")){ TwilioVerificationService() }
         single<VerificationService>(named("sendinblue")) {
-            SendinBlueTransactionalEmailService()
+            SendinBlueTransactionalEmailService(get())
         }
     }
 }

@@ -5,7 +5,7 @@ import hoang.myapp.routes.*
 import hoang.myapp.security.hashing.HashingService
 import hoang.myapp.security.token.TokenConfig
 import hoang.myapp.security.token.TokenService
-import hoang.myapp.twilio.VerificationService
+import hoang.myapp.security.verification.VerificationService
 import io.ktor.server.routing.*
 import io.ktor.server.application.*
 
@@ -20,7 +20,7 @@ fun Application.configureRouting(
     routing {
         route("/auth") {
             sendVerificationCode(twilioVerificationService, sendinBlueTransactionalEmailService)
-            checkVerificationCode(twilioVerificationService)
+            checkVerificationCode(twilioVerificationService, sendinBlueTransactionalEmailService)
             signUp(hashingService, userDataSource)
             signIn(hashingService, userDataSource, tokenService, tokenConfig)
             authenticate()

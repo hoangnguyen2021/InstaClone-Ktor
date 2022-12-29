@@ -15,11 +15,15 @@ class MongoVerificationCodeDataSource(
         verificationCodes.createIndex("{'createdAt': 1}", IndexOptions().expireAfter(2, TimeUnit.MINUTES))
     }
 
-    override suspend fun getUserByUsername(emailAddress: String): VerificationCode? {
-        return verificationCodes.findOne(VerificationCode::code eq emailAddress)
+    override suspend fun getVerificationCodeByEmailAddress(emailAddress: String): VerificationCode? {
+        return verificationCodes.findOne(VerificationCode::emailAddress eq emailAddress)
     }
 
     override suspend fun insertVerificationCode(verificationCode: VerificationCode): Boolean {
         return verificationCodes.insertOne(verificationCode).wasAcknowledged()
+    }
+
+    override suspend fun deleteVerificationCodeByEmailAddress(emailAddress: String): Boolean {
+        return verificationCodes.deleteOne(VerificationCode::emailAddress eq emailAddress).wasAcknowledged()
     }
 }

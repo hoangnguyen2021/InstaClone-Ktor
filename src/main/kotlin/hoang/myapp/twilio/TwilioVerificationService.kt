@@ -3,6 +3,7 @@ package hoang.myapp.twilio
 import com.twilio.rest.verify.v2.service.Verification
 import com.twilio.rest.verify.v2.service.VerificationCheck
 import hoang.myapp.config.Config.TWILIO_VERIFY_SERVICE_SID
+import hoang.myapp.security.verification.VerificationService
 import kotlinx.coroutines.future.await
 
 class TwilioVerificationService : VerificationService {

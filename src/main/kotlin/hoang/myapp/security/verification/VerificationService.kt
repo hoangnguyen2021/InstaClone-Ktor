@@ -1,7 +1,4 @@
-package hoang.myapp.twilio
-
-import com.twilio.rest.verify.v2.service.Verification
-import com.twilio.rest.verify.v2.service.VerificationCheck
+package hoang.myapp.security.verification
 
 interface VerificationService {
     suspend fun sendVerificationToken(recipient: String): Boolean

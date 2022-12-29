@@ -10,6 +10,7 @@ val twilioVersion: String by project
 val sendinBlueVersion: String by project
 val libphonenumberVersion: String by project
 val jmailVersion: String by project
+val javaOtpVersion: String by project
 
 plugins {
     kotlin("jvm") version "1.7.22"
@@ -95,6 +96,9 @@ dependencies {
 
     // Jmail
     implementation("com.sanctionco.jmail:jmail:$jmailVersion")
+
+    // JavaOtp
+    implementation("com.eatthepath:java-otp:$javaOtpVersion")
 
     // Testing
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")

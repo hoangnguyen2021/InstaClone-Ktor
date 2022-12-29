@@ -2,6 +2,7 @@ package hoang.myapp.data.verificationcode
 
 interface VerificationCodeDataSource {
     suspend fun createIndex()
-    suspend fun getUserByUsername(emailAddress: String): VerificationCode?
+    suspend fun getVerificationCodeByEmailAddress(emailAddress: String): VerificationCode?
     suspend fun insertVerificationCode(verificationCode: VerificationCode): Boolean
+    suspend fun deleteVerificationCodeByEmailAddress(emailAddress: String): Boolean
 }

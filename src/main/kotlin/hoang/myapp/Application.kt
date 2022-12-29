@@ -3,8 +3,6 @@ package hoang.myapp
 import com.twilio.Twilio
 import hoang.myapp.config.Config
 import hoang.myapp.data.user.UserDataSource
-import hoang.myapp.data.verificationcode.MongoVerificationCodeDataSource
-import hoang.myapp.data.verificationcode.VerificationCode
 import hoang.myapp.data.verificationcode.VerificationCodeDataSource
 import hoang.myapp.di.KoinModule
 import io.ktor.server.application.*
@@ -12,11 +10,9 @@ import hoang.myapp.plugins.*
 import hoang.myapp.security.hashing.HashingService
 import hoang.myapp.security.token.TokenConfig
 import hoang.myapp.security.token.TokenService
-import hoang.myapp.twilio.VerificationService
+import hoang.myapp.security.verification.VerificationService
 import io.ktor.http.*
 import io.ktor.server.resources.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.koin.ktor.ext.inject

@@ -9,7 +9,7 @@ import hoang.myapp.security.hashing.SaltedHash
 import hoang.myapp.security.token.TokenClaim
 import hoang.myapp.security.token.TokenConfig
 import hoang.myapp.security.token.TokenService
-import hoang.myapp.twilio.VerificationService
+import hoang.myapp.security.verification.VerificationService
 import hoang.myapp.utils.Validator
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -51,7 +51,8 @@ fun Route.sendVerificationCode(
 }
 
 fun Route.checkVerificationCode(
-    verificationService: VerificationService
+    twilioVerificationService: VerificationService,
+    sendinBlueTransactionalEmailService: VerificationService
 ) {
     get("check-verification-code") {
         val recipient = call.request.queryParameters["recipient"]
@@ -64,13 +65,11 @@ fun Route.checkVerificationCode(
         if (Validator.validateMobileNumber(recipient) || Validator.validateEmailAddress(recipient)) {
             val isSuccessful =
                 if (Validator.validateMobileNumber(recipient))
-                    verificationService.checkVerificationToken("+1${recipient}", verificationCode)
+                    twilioVerificationService.checkVerificationToken("+1${recipient}", verificationCode)
                 else
-                    verificationService.checkVerificationToken(recipient, verificationCode)
+                    sendinBlueTransactionalEmailService.checkVerificationToken(recipient, verificationCode)
             if (isSuccessful) {
-                call.respond(
-                    HttpStatusCode.OK, "Correct token"
-                )
+                call.respond(HttpStatusCode.OK, "Correct token")
             } else {
                 call.respond(HttpStatusCode.BadRequest, "Failed to check verification")
             }
