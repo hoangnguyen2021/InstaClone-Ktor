@@ -7,6 +7,7 @@ val koinKtorVersion: String by project
 val koinAnnotationsVersion: String by project
 val kotlinxCoroutinesJdk8Version: String by project
 val twilioVersion: String by project
+val sendinBlueVersion: String by project
 val libphonenumberVersion: String by project
 val jmailVersion: String by project
 
@@ -69,6 +70,7 @@ dependencies {
     // KMongo
     implementation("org.litote.kmongo:kmongo:$kmongoVersion")
     implementation("org.litote.kmongo:kmongo-coroutine:$kmongoVersion")
+    implementation("org.litote.kmongo:kmongo-id-serialization:$kmongoVersion")
 
     // Apache Commons Codec
     implementation("commons-codec:commons-codec:$commonsCodecVersion")
@@ -84,6 +86,9 @@ dependencies {
 
     // Twilio
     implementation("com.twilio.sdk:twilio:$twilioVersion")
+
+    // SendinBlue
+    implementation("com.sendinblue:sib-api-v3-sdk:$sendinBlueVersion")
 
     // libphonenumber
     implementation("com.googlecode.libphonenumber:libphonenumber:$libphonenumberVersion")

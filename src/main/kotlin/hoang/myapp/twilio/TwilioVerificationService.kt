@@ -1,29 +1,38 @@
 package hoang.myapp.twilio
 
 import com.twilio.rest.verify.v2.service.Verification
-import com.twilio.rest.verify.v2.service.Verification.Channel
 import com.twilio.rest.verify.v2.service.VerificationCheck
-import hoang.myapp.config.Config.twilioVerifyServiceSid
+import hoang.myapp.config.Config.TWILIO_VERIFY_SERVICE_SID
 import kotlinx.coroutines.future.await
 
 class TwilioVerificationService : VerificationService {
-    override suspend fun sendVerificationToken(recipient: String, channel: Channel): Verification {
-        return Verification.creator(
-            twilioVerifyServiceSid,
-            recipient,
-            channel.toString()
-        )
-            .createAsync()
-            .await()
+    override suspend fun sendVerificationToken(recipient: String): Boolean {
+        return try {
+            Verification.creator(
+                TWILIO_VERIFY_SERVICE_SID,
+                recipient,
+                Verification.Channel.SMS.toString()
+            )
+                .createAsync()
+                .await()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
-    override suspend fun checkVerificationToken(recipient: String, tokenToCheck: String): VerificationCheck {
-        return VerificationCheck.creator(
-            twilioVerifyServiceSid
-        )
-            .setTo(recipient)
-            .setCode(tokenToCheck)
-            .createAsync()
-            .await()
+    override suspend fun checkVerificationToken(recipient: String, tokenToCheck: String): Boolean {
+        return try {
+            VerificationCheck.creator(
+                TWILIO_VERIFY_SERVICE_SID
+            )
+                .setTo(recipient)
+                .setCode(tokenToCheck)
+                .createAsync()
+                .await()
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 }

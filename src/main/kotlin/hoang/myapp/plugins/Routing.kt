@@ -10,7 +10,8 @@ import io.ktor.server.routing.*
 import io.ktor.server.application.*
 
 fun Application.configureRouting(
-    verificationService: VerificationService,
+    twilioVerificationService: VerificationService,
+    sendinBlueTransactionalEmailService: VerificationService,
     userDataSource: UserDataSource,
     hashingService: HashingService,
     tokenService: TokenService,
@@ -18,8 +19,8 @@ fun Application.configureRouting(
 ) {
     routing {
         route("/auth") {
-            sendVerificationCode(verificationService)
-            checkVerificationCode(verificationService)
+            sendVerificationCode(twilioVerificationService, sendinBlueTransactionalEmailService)
+            checkVerificationCode(twilioVerificationService)
             signUp(hashingService, userDataSource)
             signIn(hashingService, userDataSource, tokenService, tokenConfig)
             authenticate()

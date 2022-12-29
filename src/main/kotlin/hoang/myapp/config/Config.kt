@@ -2,14 +2,17 @@ package hoang.myapp.config
 
 object Config {
     // MongoDB
-    val mongoPw = System.getenv("MONGO_PW")
-    val dbName = "instaclone-mongodb"
-    val connectionString = "mongodb+srv://instaclone-mongodb:$mongoPw@cluster0.ltpeq78.mongodb.net/$dbName?retryWrites=true&w=majority"
+    val MONGO_PW: String = System.getenv("MONGO_PW")
+    const val DB_NAME = "instaclone-mongodb"
+    val connectionString = "mongodb+srv://instaclone-mongodb:$MONGO_PW@cluster0.ltpeq78.mongodb.net/$DB_NAME?retryWrites=true&w=majority"
 
-    val jwtSecret = System.getenv("JWT_SECRET")
+    val jwtSecret: String = System.getenv("JWT_SECRET")
 
     // Twilio
-    val twilioUsername = "ACbe4922767caf3adf305e7005e3d6a76f"
-    val twilioPassword = System.getenv("TWILIO_PW")
-    val twilioVerifyServiceSid = "VAa709af5dd3d50cef29b2400f934509bd"
+    const val TWILIO_USERNAME = "ACbe4922767caf3adf305e7005e3d6a76f"
+    val TWILIO_PASSWORD: String = System.getenv("TWILIO_PW")
+    const val TWILIO_VERIFY_SERVICE_SID = "VAa709af5dd3d50cef29b2400f934509bd"
+
+    // SendinBlue
+    val SENDIN_BLUE_API_KEY: String = System.getenv("SENDIN_BLUE_API_KEY")
 }

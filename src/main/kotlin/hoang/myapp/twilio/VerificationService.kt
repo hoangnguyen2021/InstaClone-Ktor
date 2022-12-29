@@ -2,10 +2,9 @@ package hoang.myapp.twilio
 
 import com.twilio.rest.verify.v2.service.Verification
 import com.twilio.rest.verify.v2.service.VerificationCheck
-import com.twilio.type.PhoneNumber
 
 interface VerificationService {
-    suspend fun sendVerificationToken(recipient: String, channel: Verification.Channel): Verification
+    suspend fun sendVerificationToken(recipient: String): Boolean
 
-    suspend fun checkVerificationToken(recipient: String, tokenToCheck: String): VerificationCheck
+    suspend fun checkVerificationToken(recipient: String, tokenToCheck: String): Boolean
 }

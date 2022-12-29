@@ -3,6 +3,9 @@ package hoang.myapp
 import com.twilio.Twilio
 import hoang.myapp.config.Config
 import hoang.myapp.data.user.UserDataSource
+import hoang.myapp.data.verificationcode.MongoVerificationCodeDataSource
+import hoang.myapp.data.verificationcode.VerificationCode
+import hoang.myapp.data.verificationcode.VerificationCodeDataSource
 import hoang.myapp.di.KoinModule
 import io.ktor.server.application.*
 import hoang.myapp.plugins.*
@@ -12,9 +15,15 @@ import hoang.myapp.security.token.TokenService
 import hoang.myapp.twilio.VerificationService
 import io.ktor.http.*
 import io.ktor.server.resources.*
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.koin
+import sendinblue.ApiClient
+import sendinblue.Configuration
+import sendinblue.auth.ApiKeyAuth
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
@@ -26,6 +35,7 @@ fun Application.module() {
         modules(KoinModule.appModule)
     }
     val userDataSource: UserDataSource by inject()
+    val verificationCodeDataSource: VerificationCodeDataSource by inject()
     val tokenService: TokenService by inject()
     val tokenConfig: TokenConfig by inject {
         parametersOf(
@@ -37,8 +47,13 @@ fun Application.module() {
         )
     }
     val hashingService: HashingService by inject()
-    val verificationService: VerificationService by inject()
-    Twilio.init(Config.twilioUsername, Config.twilioPassword)
+    val twilioVerificationService: VerificationService by inject(qualifier = named("twilio"))
+    val sendinBlueTransactionalEmailService: VerificationService by inject(qualifier = named("sendinblue"))
+
+    Twilio.init(Config.TWILIO_USERNAME, Config.TWILIO_PASSWORD)
+    val defaultClient: ApiClient = Configuration.getDefaultApiClient()
+    val apiKey = defaultClient.getAuthentication("api-key") as ApiKeyAuth
+    apiKey.apiKey = Config.SENDIN_BLUE_API_KEY
 
     configureSecurity(tokenConfig)
     configureMonitoring()
@@ -46,5 +61,12 @@ fun Application.module() {
     configureSerialization()
     configureResources()
     //configureSockets()
-    configureRouting(verificationService, userDataSource, hashingService, tokenService, tokenConfig)
+    configureRouting(
+        twilioVerificationService,
+        sendinBlueTransactionalEmailService,
+        userDataSource,
+        hashingService,
+        tokenService,
+        tokenConfig
+    )
 }

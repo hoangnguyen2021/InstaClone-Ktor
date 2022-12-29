@@ -1,10 +1,7 @@
 package hoang.myapp.routes
 
-import com.twilio.rest.verify.v2.service.Verification
 import hoang.myapp.data.requests.AuthRequest
 import hoang.myapp.data.responses.AuthResponse
-import hoang.myapp.data.responses.VerificationCheckResponse
-import hoang.myapp.data.responses.VerificationResponse
 import hoang.myapp.data.user.User
 import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.security.hashing.HashingService
@@ -23,7 +20,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.sendVerificationCode(
-    verificationService: VerificationService
+    twilioVerificationService: VerificationService,
+    sendinBlueTransactionalEmailService: VerificationService
 ) {
     get("send-verification-code") {
         val recipient = call.request.queryParameters["recipient"]
@@ -33,26 +31,19 @@ fun Route.sendVerificationCode(
         }
 
         if (Validator.validateMobileNumber(recipient) || Validator.validateEmailAddress(recipient)) {
-            val verification =
-                if (Validator.validateMobileNumber(recipient))
-                    verificationService.sendVerificationToken("+1${recipient}", Verification.Channel.SMS)
-                else
-                    verificationService.sendVerificationToken(recipient, Verification.Channel.EMAIL)
-            call.respond(
-                HttpStatusCode.OK,
-                VerificationResponse(
-                    sid = verification.sid,
-                    serviceSid = verification.serviceSid,
-                    accountSid = verification.accountSid,
-                    to = verification.to,
-                    channel = verification.channel,
-                    status = verification.status,
-                    valid = verification.valid,
-                    amount = verification.amount,
-                    payee = verification.payee,
-                    dateCreated = verification.dateCreated
-                )
-            )
+            val isSuccessful =
+                if (Validator.validateMobileNumber(recipient)) {
+                    twilioVerificationService.sendVerificationToken("+1${recipient}")
+                }
+                else {
+                    sendinBlueTransactionalEmailService.sendVerificationToken(recipient)
+                }
+
+            if (isSuccessful) {
+                call.respond(HttpStatusCode.OK, "Verification sent")
+            } else {
+                call.respond(HttpStatusCode.InternalServerError, "Failed to send verification")
+            }
         } else {
             call.respond(HttpStatusCode.BadRequest, "Invalid parameters")
         }
@@ -71,29 +62,17 @@ fun Route.checkVerificationCode(
         }
 
         if (Validator.validateMobileNumber(recipient) || Validator.validateEmailAddress(recipient)) {
-            val verificationCheck =
+            val isSuccessful =
                 if (Validator.validateMobileNumber(recipient))
                     verificationService.checkVerificationToken("+1${recipient}", verificationCode)
                 else
                     verificationService.checkVerificationToken(recipient, verificationCode)
-            if (verificationCheck.status.equals("approved")) {
+            if (isSuccessful) {
                 call.respond(
-                    HttpStatusCode.OK,
-                    VerificationCheckResponse(
-                        sid = verificationCheck.sid,
-                        serviceSid = verificationCheck.serviceSid,
-                        accountSid = verificationCheck.accountSid,
-                        to = verificationCheck.to,
-                        channel = verificationCheck.channel,
-                        status = verificationCheck.status,
-                        valid = verificationCheck.valid,
-                        amount = verificationCheck.amount,
-                        payee = verificationCheck.payee,
-                        dateCreated = verificationCheck.dateCreated
-                    )
+                    HttpStatusCode.OK, "Correct token"
                 )
             } else {
-                call.respond(HttpStatusCode.BadRequest, "Wrong verification token")
+                call.respond(HttpStatusCode.BadRequest, "Failed to check verification")
             }
         } else {
             call.respond(HttpStatusCode.BadRequest, "Invalid parameters")
