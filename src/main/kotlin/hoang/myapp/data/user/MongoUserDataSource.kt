@@ -6,12 +6,12 @@ import org.litote.kmongo.eq
 class MongoUserDataSource(
     db: CoroutineDatabase
 ): UserDataSource {
-    private val users = db.getCollection<User>()
-    override suspend fun getUserByUsername(username: String): User? {
-        return users.findOne(User::username eq username)
+    private val users = db.getCollection<InstaCloneUser>()
+    override suspend fun getUserByUsername(username: String): InstaCloneUser? {
+        return users.findOne(InstaCloneUser::username eq username)
     }
 
-    override suspend fun insertUser(user: User): Boolean {
-        return users.insertOne(user).wasAcknowledged()
+    override suspend fun insertUser(instaCloneUser: InstaCloneUser): Boolean {
+        return users.insertOne(instaCloneUser).wasAcknowledged()
     }
 }

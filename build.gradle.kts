@@ -1,5 +1,6 @@
 val ktorVersion: String by project
 val kotlinVersion: String by project
+val kotlinxDateTimeVersion: String by project
 val kmongoVersion: String by project
 val logbackVersion: String by project
 val commonsCodecVersion: String by project
@@ -82,6 +83,9 @@ dependencies {
     implementation("io.insert-koin:koin-logger-slf4j:$koinKtorVersion")
     implementation("io.insert-koin:koin-annotations:$koinAnnotationsVersion")
     ksp("io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
+
+    // Kotlinx Datetime
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDateTimeVersion")
 
     // Kotlinx Coroutines JDK8
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$kotlinxCoroutinesJdk8Version")
