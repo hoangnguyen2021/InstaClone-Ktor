@@ -1,9 +1,7 @@
-package hoang.myapp.sendinblue
+package hoang.myapp.security.verification
 
 import hoang.myapp.data.verificationcode.VerificationCode
 import hoang.myapp.data.verificationcode.VerificationCodeDataSource
-import hoang.myapp.security.verification.OtpGenerator
-import hoang.myapp.security.verification.VerificationService
 import sibApi.TransactionalEmailsApi
 import sibModel.SendSmtpEmail
 import sibModel.SendSmtpEmailTo

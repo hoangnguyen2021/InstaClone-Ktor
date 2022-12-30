@@ -11,6 +11,7 @@ import hoang.myapp.security.hashing.HashingService
 import hoang.myapp.security.token.TokenConfig
 import hoang.myapp.security.token.TokenService
 import hoang.myapp.security.verification.VerificationService
+import hoang.myapp.storage.StorageService
 import io.ktor.http.*
 import io.ktor.server.resources.*
 import org.koin.core.parameter.parametersOf
@@ -30,8 +31,10 @@ fun Application.module() {
     koin {
         modules(KoinModule.appModule)
     }
+    val twilioVerificationService: VerificationService by inject(qualifier = named("twilio"))
+    val sendinBlueTransactionalEmailService: VerificationService by inject(qualifier = named("sendinblue"))
+    val storageService: StorageService by inject()
     val userDataSource: UserDataSource by inject()
-    val verificationCodeDataSource: VerificationCodeDataSource by inject()
     val tokenService: TokenService by inject()
     val tokenConfig: TokenConfig by inject {
         parametersOf(
@@ -43,10 +46,11 @@ fun Application.module() {
         )
     }
     val hashingService: HashingService by inject()
-    val twilioVerificationService: VerificationService by inject(qualifier = named("twilio"))
-    val sendinBlueTransactionalEmailService: VerificationService by inject(qualifier = named("sendinblue"))
 
+    // init Twilio
     Twilio.init(Config.TWILIO_USERNAME, Config.TWILIO_PASSWORD)
+
+    // init SendinBlue
     val defaultClient: ApiClient = Configuration.getDefaultApiClient()
     val apiKey = defaultClient.getAuthentication("api-key") as ApiKeyAuth
     apiKey.apiKey = Config.SENDIN_BLUE_API_KEY
@@ -61,6 +65,7 @@ fun Application.module() {
         twilioVerificationService,
         sendinBlueTransactionalEmailService,
         userDataSource,
+        storageService,
         hashingService,
         tokenService,
         tokenConfig

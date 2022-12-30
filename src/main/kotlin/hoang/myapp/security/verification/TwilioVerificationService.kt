@@ -1,4 +1,4 @@
-package hoang.myapp.twilio
+package hoang.myapp.security.verification
 
 import com.twilio.rest.verify.v2.service.Verification
 import com.twilio.rest.verify.v2.service.VerificationCheck

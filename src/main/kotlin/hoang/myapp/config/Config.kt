@@ -2,9 +2,9 @@ package hoang.myapp.config
 
 object Config {
     // MongoDB
-    val MONGO_PW: String = System.getenv("MONGO_PW")
-    const val DB_NAME = "instaclone-mongodb"
-    val connectionString = "mongodb+srv://instaclone-mongodb:$MONGO_PW@cluster0.ltpeq78.mongodb.net/$DB_NAME?retryWrites=true&w=majority"
+    val MONGODB_PW: String = System.getenv("MONGO_PW")
+    const val MONGODB_DB_NAME = "instaclone-mongodb"
+    val MONGODB_CONNECTION_STRING = "mongodb+srv://instaclone-mongodb:$MONGODB_PW@cluster0.ltpeq78.mongodb.net/$MONGODB_DB_NAME?retryWrites=true&w=majority"
 
     val jwtSecret: String = System.getenv("JWT_SECRET")
 
@@ -15,4 +15,8 @@ object Config {
 
     // SendinBlue
     val SENDIN_BLUE_API_KEY: String = System.getenv("SENDIN_BLUE_API_KEY")
+
+    // AWS
+    const val AWS_REGION = "us-east-1"
+    const val AWS_BUCKET_NAME = "instacloneco"
 }

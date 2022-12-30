@@ -11,6 +11,7 @@ val sendinBlueVersion: String by project
 val libphonenumberVersion: String by project
 val jmailVersion: String by project
 val javaOtpVersion: String by project
+val awsKotlinVersion: String by project
 
 plugins {
     kotlin("jvm") version "1.7.22"
@@ -99,6 +100,10 @@ dependencies {
 
     // JavaOtp
     implementation("com.eatthepath:java-otp:$javaOtpVersion")
+
+    // AWS
+    implementation("aws.sdk.kotlin:s3:$awsKotlinVersion")
+    implementation("aws.sdk.kotlin:iam:$awsKotlinVersion")
 
     // Testing
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
