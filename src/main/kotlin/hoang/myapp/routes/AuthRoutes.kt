@@ -94,7 +94,7 @@ fun Route.signUp(
         val instaCloneUser = request.mapToInstaCloneUser(saltedHash)
         val wasAcknowledged = userDataSource.insertUser(instaCloneUser)
         if (!wasAcknowledged) {
-            call.respond(HttpStatusCode.Conflict)
+            call.respond(HttpStatusCode.Conflict, "Failed to sign up user")
             return@post
         }
 
