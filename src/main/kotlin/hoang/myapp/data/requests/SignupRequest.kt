@@ -9,30 +9,30 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SignupRequest(
-    var mobileNumber: Long? = null,
-    var isMobileNumberVerified: Boolean = false,
-    var email: String? = null,
-    var isEmailVerified: Boolean = false,
-    var fullName: String,
-    var birthday: LocalDate,
-    var username: String,
-    var password: String,
-    var agreedToPolicy: Boolean = false,
-    var profilePicPath: String? = null
+    val mobileNumber: Long? = null,
+    val isMobileNumberVerified: Boolean = false,
+    val email: String? = null,
+    val isEmailVerified: Boolean = false,
+    val fullName: String,
+    val birthday: LocalDate,
+    val username: String,
+    val password: String,
+    val agreedToPolicy: Boolean = false,
+    val profilePicPath: String? = null
 ) {
     fun mapToInstaCloneUser(saltedHash: SaltedHash): InstaCloneUser {
         return InstaCloneUser(
             mobileNumber =
             if (mobileNumber != null) {
                 MobileNumber(
-                    number = mobileNumber!!,
+                    number = mobileNumber,
                     isVerified = isMobileNumberVerified
                 )
             } else { null },
             email =
             if (email != null) {
                 Email(
-                    email = email!!,
+                    email = email,
                     isVerified = isEmailVerified
                 )
             } else { null },

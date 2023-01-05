@@ -1,10 +1,8 @@
 package hoang.myapp.routes
 
+import hoang.myapp.data.requests.LoginRequest
 import hoang.myapp.data.requests.SignupRequest
 import hoang.myapp.data.responses.AuthResponse
-import hoang.myapp.data.user.Email
-import hoang.myapp.data.user.InstaCloneUser
-import hoang.myapp.data.user.MobileNumber
 import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.security.hashing.HashingService
 import hoang.myapp.security.hashing.SaltedHash
@@ -107,34 +105,44 @@ fun Route.signIn(
     tokenService: TokenService,
     tokenConfig: TokenConfig
 ) {
-    post("sign-in") {
-//        val request = call.receiveNullable<SignupRequest>() ?: kotlin.run {
-//            call.respond(HttpStatusCode.BadRequest)
-//            return@post
-//        }
-//
-//        val user = userDataSource.getUserByUsername(request.username)
-//        if (user == null) {
-//            call.respond(HttpStatusCode.Conflict, "This username is not registered")
-//            return@post
-//        }
-//
-//        val saltedHash = SaltedHash(user.password, user.salt)
-//        val isValidPassword = hashingService.verify(request.password, saltedHash)
-//        if (!isValidPassword) {
-//            call.respond(HttpStatusCode.Conflict, "Incorrect password")
-//            return@post
-//        }
-//
-//        val tokenClaim = TokenClaim(name = "userId", value = user.id.toString())
-//        val token = tokenService.generate(tokenConfig, tokenClaim)
-//
-//        call.respond(
-//            status = HttpStatusCode.OK,
-//            message = AuthResponse(
-//                token = token
-//            )
-//        )
+    post("log-in") {
+        val request = call.receiveNullable<LoginRequest>() ?: kotlin.run {
+            call.respond(HttpStatusCode.BadRequest)
+            return@post
+        }
+
+        val user = if (request.username != null) {
+            userDataSource.getUserByUsername(request.username)
+        } else if (request.email != null) {
+            userDataSource.getUserByEmail(request.email)
+        } else if (request.mobileNumber != null) {
+            userDataSource.getUserByMobileNumber(request.mobileNumber)
+        } else {
+            call.respond(HttpStatusCode.BadRequest)
+            return@post
+        }
+
+        if (user == null) {
+            call.respond(HttpStatusCode.NotFound, "Can't find account")
+            return@post
+        }
+
+        val saltedHash = SaltedHash(user.password, user.salt)
+        val isCorrectPassword = hashingService.verify(request.password, saltedHash)
+        if (!isCorrectPassword) {
+            call.respond(HttpStatusCode.BadRequest, "Incorrect password")
+            return@post
+        }
+
+        val tokenClaim = TokenClaim(name = "userId", value = user._id.toString())
+        val token = tokenService.generate(tokenConfig, tokenClaim)
+
+        call.respond(
+            status = HttpStatusCode.OK,
+            message = AuthResponse(
+                token = token
+            )
+        )
     }
 }
 
