@@ -39,10 +39,8 @@ sourceSets.main {
 }
 
 dependencies {
-    // Netty
-    implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
-
     // Ktor
+    implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
     implementation("io.ktor:ktor-server-cors:$ktorVersion")
     implementation("io.ktor:ktor-server-auth-jvm:$ktorVersion")
@@ -94,6 +92,6 @@ dependencies {
     implementation("aws.sdk.kotlin:iam:$awsKotlinVersion")
 
     // Testing
-    testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
 }

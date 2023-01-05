@@ -36,8 +36,7 @@ fun Route.sendVerificationCode(
             val isSuccessful =
                 if (Validator.validateMobileNumber(recipient)) {
                     twilioVerificationService.sendVerificationToken("+1${recipient}")
-                }
-                else {
+                } else {
                     sendinBlueTransactionalEmailService.sendVerificationToken(recipient)
                 }
             if (isSuccessful) {
