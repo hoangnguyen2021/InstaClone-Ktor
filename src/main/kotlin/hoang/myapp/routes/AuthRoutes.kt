@@ -112,6 +112,7 @@ fun Route.signIn(
         }
 
         val user = if (request.username != null) {
+            println("HELLO")
             userDataSource.getUserByUsername(request.username)
         } else if (request.email != null) {
             userDataSource.getUserByEmail(request.email)

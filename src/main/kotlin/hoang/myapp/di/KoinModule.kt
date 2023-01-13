@@ -10,7 +10,7 @@ import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.data.verificationcode.MongoVerificationCodeDataSource
 import hoang.myapp.data.verificationcode.VerificationCodeDataSource
 import hoang.myapp.security.hashing.HashingService
-import hoang.myapp.security.hashing.SHA256HashingService
+import hoang.myapp.security.hashing.Password4jHashingService
 import hoang.myapp.security.token.JwtTokenService
 import hoang.myapp.security.token.TokenConfig
 import hoang.myapp.security.token.TokenService
@@ -48,6 +48,6 @@ object KoinModule {
         singleOf<VerificationCodeDataSource, CoroutineDatabase>(::MongoVerificationCodeDataSource)
         singleOf<TokenService>(::JwtTokenService)
         singleOf(::TokenConfig)
-        singleOf<HashingService>(::SHA256HashingService)
+        singleOf<HashingService>(::Password4jHashingService)
     }
 }

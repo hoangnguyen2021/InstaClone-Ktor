@@ -13,6 +13,7 @@ val libphonenumberVersion: String by project
 val jmailVersion: String by project
 val javaOtpVersion: String by project
 val awsKotlinVersion: String by project
+val password4jVersion: String by project
 
 plugins {
     kotlin("jvm") version "1.7.22"
@@ -90,6 +91,9 @@ dependencies {
     // AWS
     implementation("aws.sdk.kotlin:s3:$awsKotlinVersion")
     implementation("aws.sdk.kotlin:iam:$awsKotlinVersion")
+
+    // password4j
+    implementation("com.password4j:password4j:$password4jVersion")
 
     // Testing
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
