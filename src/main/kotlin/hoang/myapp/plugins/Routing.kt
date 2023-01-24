@@ -28,9 +28,14 @@ fun Application.configureRouting(
             authenticate()
             getSecretInfo()
         }
-        route("/images") {
-            uploadProfilePic(storageService)
-            getProfilePic(storageService)
+        route("/media") {
+            route("/profile-pic") {
+                uploadProfilePic(storageService)
+                getProfilePic(storageService)
+            }
+            route("/post") {
+                uploadUserMedia(storageService)
+            }
         }
     }
 }
