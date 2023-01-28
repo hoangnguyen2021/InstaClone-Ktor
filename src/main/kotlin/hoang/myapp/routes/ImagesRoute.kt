@@ -94,9 +94,9 @@ fun Route.uploadPostImage(storageService: StorageService) {
                 is PartData.FileItem -> {
                     fileNames.add(part.originalFileName as String)
                     val fileBytes = part.streamProvider().readBytes()
-                    val byteArrayOutputStream = ByteArrayOutputStream()
-                    byteArrayOutputStream.writeBytes(fileBytes)
-                    byteArrayOutputStreams.add(byteArrayOutputStream)
+                    ByteArrayOutputStream()
+                        .apply { writeBytes(fileBytes) }
+                        .also { byteArrayOutputStreams.add(it) }
                 }
 
                 else -> {}
@@ -109,17 +109,18 @@ fun Route.uploadPostImage(storageService: StorageService) {
             call.respond(HttpStatusCode.InternalServerError, "Cannot read file(s)")
             return@post
         }
-        if (fileDescription != null && fileNames.isNotEmpty()) {
-            val uploadResult = storageService.uploadToBucket(
-                AWS_BUCKET_NAME,
-                fileNames.map { fileName -> "user-media/$fileDescription/$fileName" },
-                byteArrays
-            )
-            uploadResult
-                .onSuccess { call.respond(HttpStatusCode.OK, it) }
-                .onFailure { call.respond(HttpStatusCode.InternalServerError, it.toString()) }
-        } else {
+        if (fileDescription == null || fileNames.isEmpty()) {
             call.respond(HttpStatusCode.InternalServerError, "File name or file description not found")
+            return@post
         }
+
+        val uploadResult = storageService.uploadToBucket(
+            AWS_BUCKET_NAME,
+            fileNames.map { fileName -> "user-media/$fileDescription/$fileName" },
+            byteArrays
+        )
+        uploadResult
+            .onSuccess { call.respond(HttpStatusCode.OK, it) }
+            .onFailure { call.respond(HttpStatusCode.InternalServerError, it.toString()) }
     }
 }
