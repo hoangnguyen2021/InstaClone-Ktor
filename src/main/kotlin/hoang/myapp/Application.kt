@@ -2,6 +2,7 @@ package hoang.myapp
 
 import com.twilio.Twilio
 import hoang.myapp.config.Config
+import hoang.myapp.data.post.PostDataSource
 import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.data.verificationcode.VerificationCodeDataSource
 import hoang.myapp.di.KoinModule
@@ -46,6 +47,7 @@ fun Application.module() {
         )
     }
     val hashingService: HashingService by inject()
+    val postDataSource: PostDataSource by inject()
 
     // init Twilio
     Twilio.init(Config.TWILIO_USERNAME, Config.TWILIO_PASSWORD)
@@ -68,6 +70,7 @@ fun Application.module() {
         storageService,
         hashingService,
         tokenService,
-        tokenConfig
+        tokenConfig,
+        postDataSource
     )
 }

@@ -1,5 +1,6 @@
 package hoang.myapp.plugins
 
+import hoang.myapp.data.post.PostDataSource
 import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.routes.*
 import hoang.myapp.security.hashing.HashingService
@@ -17,7 +18,8 @@ fun Application.configureRouting(
     storageService: StorageService,
     hashingService: HashingService,
     tokenService: TokenService,
-    tokenConfig: TokenConfig
+    tokenConfig: TokenConfig,
+    postDataSource: PostDataSource
 ) {
     routing {
         route("/auth") {
@@ -35,6 +37,7 @@ fun Application.configureRouting(
             }
             route("/post") {
                 uploadPostImage(storageService)
+                createPost(postDataSource, userDataSource)
             }
         }
     }

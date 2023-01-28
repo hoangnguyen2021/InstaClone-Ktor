@@ -5,6 +5,8 @@ import aws.sdk.kotlin.services.s3.S3Client
 import hoang.myapp.config.Config.AWS_REGION
 import hoang.myapp.config.Config.MONGODB_DB_NAME
 import hoang.myapp.config.Config.MONGODB_CONNECTION_STRING
+import hoang.myapp.data.post.MongoPostDataSource
+import hoang.myapp.data.post.PostDataSource
 import hoang.myapp.data.user.MongoUserDataSource
 import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.data.verificationcode.MongoVerificationCodeDataSource
@@ -49,5 +51,6 @@ object KoinModule {
         singleOf<TokenService>(::JwtTokenService)
         singleOf(::TokenConfig)
         singleOf<HashingService>(::Password4jHashingService)
+        singleOf<PostDataSource, CoroutineDatabase>(::MongoPostDataSource)
     }
 }
