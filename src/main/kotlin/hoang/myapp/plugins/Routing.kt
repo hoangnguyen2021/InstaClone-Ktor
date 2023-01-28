@@ -34,7 +34,7 @@ fun Application.configureRouting(
                 getProfilePic(storageService)
             }
             route("/post") {
-                uploadUserMedia(storageService)
+                uploadPostImage(storageService)
             }
         }
     }

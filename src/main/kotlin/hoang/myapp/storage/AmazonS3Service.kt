@@ -9,7 +9,11 @@ import aws.smithy.kotlin.runtime.content.toByteArray
 class AmazonS3Service(
     private val s3Client: S3Client
 ) : StorageService {
-    override suspend fun uploadToBucket(bucketName: String, objectKey: String, byteArray: ByteArray): Result<String> {
+    override suspend fun uploadToBucket(
+        bucketName: String,
+        objectKey: String,
+        byteArray: ByteArray
+    ): Result<String> {
         return try {
             val request = PutObjectRequest {
                 bucket = bucketName
@@ -22,6 +26,29 @@ class AmazonS3Service(
             }
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    override suspend fun uploadToBucket(
+        bucketName: String,
+        objectKeys: List<String>,
+        byteArrays: List<ByteArray>
+    ): Result<List<String>> {
+        try {
+            if (objectKeys.size != byteArrays.size)
+                return Result.failure(IllegalArgumentException())
+
+            objectKeys.zip(byteArrays).forEach {
+                val request = PutObjectRequest {
+                    bucket = bucketName
+                    key = it.first
+                    body = ByteStream.fromBytes(it.second)
+                }
+                s3Client.putObject(request)
+            }
+            return Result.success(objectKeys)
+        } catch (e: Exception) {
+            return Result.failure(e)
         }
     }
 
