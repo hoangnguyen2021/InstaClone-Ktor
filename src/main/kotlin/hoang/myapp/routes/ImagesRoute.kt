@@ -73,7 +73,7 @@ fun Route.getProfilePic(storageService: StorageService) {
 }
 
 fun Route.uploadPostImage(storageService: StorageService) {
-    post("upload-post-image") {
+    post("upload-images") {
         val multipartData = try {
             call.receiveMultipart()
         } catch (e: Exception) {
