@@ -8,6 +8,6 @@ import org.litote.kmongo.newId
 @Serializable
 data class Email(
     @Contextual val _id: Id<Email> = newId(),
-    var email: String,
-    var isVerified: Boolean = false
+    val email: String,
+    val isVerified: Boolean = false
 )

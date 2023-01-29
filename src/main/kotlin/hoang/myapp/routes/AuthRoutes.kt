@@ -112,7 +112,6 @@ fun Route.signIn(
         }
 
         val user = if (request.username != null) {
-            println("HELLO")
             userDataSource.getUserByUsername(request.username)
         } else if (request.email != null) {
             userDataSource.getUserByEmail(request.email)
@@ -128,7 +127,10 @@ fun Route.signIn(
             return@post
         }
 
-        val saltedHash = SaltedHash(user.password, user.salt)
+        val saltedHash = SaltedHash(
+            hash = user.password,
+            salt = user.salt
+        )
         val isCorrectPassword = hashingService.verify(request.password, saltedHash)
         if (!isCorrectPassword) {
             call.respond(HttpStatusCode.BadRequest, "Incorrect password")
@@ -141,7 +143,14 @@ fun Route.signIn(
         call.respond(
             status = HttpStatusCode.OK,
             message = AuthResponse(
-                token = token
+                token = token,
+                username = user.username,
+                mobileNumber = user.mobileNumber,
+                email = user.email,
+                fullName = user.fullName,
+                birthday = user.birthday,
+                agreedToPolicy = user.agreedToPolicy,
+                profilePicPath = user.profilePicPath
             )
         )
     }

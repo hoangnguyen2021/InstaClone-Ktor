@@ -8,6 +8,6 @@ import org.litote.kmongo.newId
 @Serializable
 data class MobileNumber(
     @Contextual val _id: Id<MobileNumber> = newId(),
-    var number: Long,
-    var isVerified: Boolean = false
+    val number: Long,
+    val isVerified: Boolean = false
 )

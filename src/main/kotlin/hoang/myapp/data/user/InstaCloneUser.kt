@@ -15,7 +15,7 @@ data class InstaCloneUser(
     val email: Email? = null,
     val fullName: String,
     val username: String,
-    var birthday: LocalDate,
-    var agreedToPolicy: Boolean = false,
-    var profilePicPath: String? = null
+    val birthday: LocalDate,
+    val agreedToPolicy: Boolean = false,
+    val profilePicPath: String? = null
 )
