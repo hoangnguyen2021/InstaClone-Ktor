@@ -41,3 +41,26 @@ fun Route.createPost(
         call.respond(HttpStatusCode.OK, "Post created successfully")
     }
 }
+
+fun Route.getPostsByUser(
+    postDataSource: PostDataSource,
+    userDataSource: UserDataSource
+) {
+    get("all") {
+        val authorUsername = call.request.queryParameters["authorUsername"]
+        if (authorUsername == null) {
+            call.respond(HttpStatusCode.BadRequest, "Missing parameters")
+            return@get
+        }
+
+        val author = userDataSource.getUserByUsername(authorUsername)
+        if (author == null) {
+            call.respond(HttpStatusCode.BadRequest)
+            return@get
+        }
+        println(author)
+
+        val posts = postDataSource.getPostsByUser(author._id)
+        call.respond(HttpStatusCode.OK, posts)
+    }
+}

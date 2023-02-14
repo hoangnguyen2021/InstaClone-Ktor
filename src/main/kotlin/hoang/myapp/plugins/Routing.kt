@@ -38,6 +38,7 @@ fun Application.configureRouting(
             route("/post") {
                 uploadPostImage(storageService)
                 createPost(postDataSource, userDataSource)
+                getPostsByUser(postDataSource, userDataSource)
             }
         }
     }
