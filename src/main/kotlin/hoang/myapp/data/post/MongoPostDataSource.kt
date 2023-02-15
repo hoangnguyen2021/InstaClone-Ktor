@@ -14,6 +14,9 @@ class MongoPostDataSource(
     }
 
     override suspend fun getPostsByUser(authorId: Id<InstaCloneUser>): List<InstaClonePost> {
-        return posts.find(InstaClonePost::authorId eq authorId).toList()
+        return posts
+            .find(InstaClonePost::authorId eq authorId)
+            .descendingSort(InstaClonePost::createdAt)
+            .toList()
     }
 }
