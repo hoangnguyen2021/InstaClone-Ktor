@@ -145,8 +145,8 @@ fun Route.signIn(
             message = AuthResponse(
                 token = token,
                 username = user.username,
-                mobileNumber = user.mobileNumber?.toARMobileNumber(),
-                email = user.email?.toAREmail(),
+                mobileNumber = user.mobileNumber,
+                email = user.email,
                 fullName = user.fullName,
                 birthday = user.birthday,
                 agreedToPolicy = user.agreedToPolicy,
