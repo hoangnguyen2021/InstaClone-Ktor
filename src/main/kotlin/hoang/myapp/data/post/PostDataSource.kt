@@ -6,4 +6,5 @@ import org.litote.kmongo.Id
 interface PostDataSource {
     suspend fun insertPost(instaClonePost: InstaClonePost): Boolean
     suspend fun getPostsByUser(authorId: Id<InstaCloneUser>): List<InstaClonePost>
+    suspend fun getPostById(id: String): InstaClonePost?
 }

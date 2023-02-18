@@ -39,6 +39,7 @@ fun Application.configureRouting(
                 uploadPostImage(storageService)
                 createPost(postDataSource, userDataSource)
                 getPostsByUser(postDataSource, userDataSource)
+                getPostById(postDataSource)
             }
         }
     }

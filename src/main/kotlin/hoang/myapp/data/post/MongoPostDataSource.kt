@@ -1,6 +1,7 @@
 package hoang.myapp.data.post
 
 import hoang.myapp.data.user.InstaCloneUser
+import org.bson.types.ObjectId
 import org.litote.kmongo.Id
 import org.litote.kmongo.coroutine.CoroutineDatabase
 import org.litote.kmongo.eq
@@ -18,5 +19,9 @@ class MongoPostDataSource(
             .find(InstaClonePost::authorId eq authorId)
             .descendingSort(InstaClonePost::createdAt)
             .toList()
+    }
+
+    override suspend fun getPostById(id: String): InstaClonePost? {
+        return posts.findOneById(ObjectId(id))
     }
 }

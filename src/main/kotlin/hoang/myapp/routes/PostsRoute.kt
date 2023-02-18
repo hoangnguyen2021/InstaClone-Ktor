@@ -63,3 +63,23 @@ fun Route.getPostsByUser(
         call.respond(HttpStatusCode.OK, posts)
     }
 }
+
+fun Route.getPostById(
+    postDataSource: PostDataSource
+) {
+    get("post-by-id") {
+        val id = call.request.queryParameters["id"]
+        if (id == null) {
+            call.respond(HttpStatusCode.BadRequest, "Missing parameters")
+            return@get
+        }
+
+        val post = postDataSource.getPostById(id)
+        if (post== null) {
+            call.respond(HttpStatusCode.BadRequest, "Post not found with the given id")
+            return@get
+        }
+
+        call.respond(HttpStatusCode.OK, post)
+    }
+}
