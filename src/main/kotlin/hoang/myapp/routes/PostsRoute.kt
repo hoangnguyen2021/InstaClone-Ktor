@@ -75,7 +75,7 @@ fun Route.getPostById(
         }
 
         val post = postDataSource.getPostById(id)
-        if (post== null) {
+        if (post == null) {
             call.respond(HttpStatusCode.BadRequest, "Post not found with the given id")
             return@get
         }

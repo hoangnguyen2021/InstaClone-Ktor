@@ -42,5 +42,8 @@ fun Application.configureRouting(
                 getPostById(postDataSource)
             }
         }
+        route("/users") {
+            getUserById(userDataSource)
+        }
     }
 }
