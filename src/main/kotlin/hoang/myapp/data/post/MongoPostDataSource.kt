@@ -2,13 +2,12 @@ package hoang.myapp.data.post
 
 import hoang.myapp.data.user.InstaCloneUser
 import org.bson.types.ObjectId
-import org.litote.kmongo.Id
+import org.litote.kmongo.*
 import org.litote.kmongo.coroutine.CoroutineDatabase
-import org.litote.kmongo.eq
 
 class MongoPostDataSource(
     db: CoroutineDatabase
-): PostDataSource {
+) : PostDataSource {
     private val posts = db.getCollection<InstaClonePost>()
     override suspend fun insertPost(instaClonePost: InstaClonePost): Boolean {
         return posts.insertOne(instaClonePost).wasAcknowledged()
@@ -23,5 +22,23 @@ class MongoPostDataSource(
 
     override suspend fun getPostById(id: String): InstaClonePost? {
         return posts.findOneById(ObjectId(id))
+    }
+
+    override suspend fun likePost(id: String, userId: Id<InstaCloneUser>): Boolean {
+        return posts
+            .updateOneById(
+                ObjectId(id),
+                addToSet(InstaClonePost::likes, userId)
+            )
+            .wasAcknowledged()
+    }
+
+    override suspend fun unlikePost(id: String, userId: Id<InstaCloneUser>): Boolean {
+        return posts
+            .updateOneById(
+                ObjectId(id),
+                pull(InstaClonePost::likes, userId)
+            )
+            .wasAcknowledged()
     }
 }

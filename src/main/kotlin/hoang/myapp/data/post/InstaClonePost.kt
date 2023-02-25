@@ -15,7 +15,7 @@ data class InstaClonePost(
     val createdAt: Instant,
     val lastEditedAt: Instant,
     val mediaPaths: List<String> = emptyList(),
-    val likes: Int = 0,
+    val likes: List<Id<InstaCloneUser>> = emptyList(),
     @Contextual val tags: List<Id<InstaCloneUser>> = emptyList(),
     val comments: List<Comment> = emptyList()
 )

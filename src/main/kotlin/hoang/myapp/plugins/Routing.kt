@@ -40,6 +40,8 @@ fun Application.configureRouting(
                 createPost(postDataSource, userDataSource)
                 getPostsByUser(postDataSource, userDataSource)
                 getPostById(postDataSource)
+                likePost(postDataSource, userDataSource)
+                unlikePost(postDataSource, userDataSource)
             }
         }
         route("/users") {

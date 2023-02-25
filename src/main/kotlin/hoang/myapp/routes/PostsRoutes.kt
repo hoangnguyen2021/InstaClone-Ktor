@@ -83,3 +83,59 @@ fun Route.getPostById(
         call.respond(HttpStatusCode.OK, post)
     }
 }
+
+fun Route.likePost(
+    postDataSource: PostDataSource,
+    userDataSource: UserDataSource
+) {
+    get("like") {
+        val postId = call.request.queryParameters["postId"]
+        val userId = call.request.queryParameters["userId"]
+        if (postId == null || userId == null) {
+            call.respond(HttpStatusCode.BadRequest, "Missing parameters")
+            return@get
+        }
+
+        val user = userDataSource.getUserById(userId)
+        if (user == null) {
+            call.respond(HttpStatusCode.BadRequest, "User not found with the given id")
+            return@get
+        }
+
+        val wasAcknowledge = postDataSource.likePost(postId, user._id)
+        if (!wasAcknowledge) {
+            call.respond(HttpStatusCode.InternalServerError, "Failed to like post")
+            return@get
+        }
+
+        call.respond(HttpStatusCode.OK, "Post liked successfully")
+    }
+}
+
+fun Route.unlikePost(
+    postDataSource: PostDataSource,
+    userDataSource: UserDataSource
+) {
+    get("unlike") {
+        val postId = call.request.queryParameters["postId"]
+        val userId = call.request.queryParameters["userId"]
+        if (postId == null || userId == null) {
+            call.respond(HttpStatusCode.BadRequest, "Missing parameters")
+            return@get
+        }
+
+        val user = userDataSource.getUserById(userId)
+        if (user == null) {
+            call.respond(HttpStatusCode.BadRequest, "User not found with the given id")
+            return@get
+        }
+
+        val wasAcknowledge = postDataSource.unlikePost(postId, user._id)
+        if (!wasAcknowledge) {
+            call.respond(HttpStatusCode.InternalServerError, "Failed to unlike post")
+            return@get
+        }
+
+        call.respond(HttpStatusCode.OK, "Post unliked successfully")
+    }
+}
