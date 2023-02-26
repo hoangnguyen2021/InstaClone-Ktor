@@ -24,20 +24,20 @@ class MongoPostDataSource(
         return posts.findOneById(ObjectId(id))
     }
 
-    override suspend fun likePost(id: String, userId: Id<InstaCloneUser>): Boolean {
+    override suspend fun likePost(postId: String, userId: Id<InstaCloneUser>): Boolean {
         return posts
             .updateOneById(
-                ObjectId(id),
-                addToSet(InstaClonePost::likes, userId)
+                ObjectId(postId),
+                addToSet(InstaClonePost::likes, userId.toString())
             )
             .wasAcknowledged()
     }
 
-    override suspend fun unlikePost(id: String, userId: Id<InstaCloneUser>): Boolean {
+    override suspend fun unlikePost(postId: String, userId: Id<InstaCloneUser>): Boolean {
         return posts
             .updateOneById(
-                ObjectId(id),
-                pull(InstaClonePost::likes, userId)
+                ObjectId(postId),
+                pull(InstaClonePost::likes, userId.toString())
             )
             .wasAcknowledged()
     }

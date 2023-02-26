@@ -144,6 +144,7 @@ fun Route.signIn(
             status = HttpStatusCode.OK,
             message = AuthResponse(
                 token = token,
+                id = user._id,
                 username = user.username,
                 mobileNumber = user.mobileNumber,
                 email = user.email,

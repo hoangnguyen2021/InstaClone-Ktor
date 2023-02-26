@@ -7,6 +7,6 @@ interface PostDataSource {
     suspend fun insertPost(instaClonePost: InstaClonePost): Boolean
     suspend fun getPostsByUser(authorId: Id<InstaCloneUser>): List<InstaClonePost>
     suspend fun getPostById(id: String): InstaClonePost?
-    suspend fun likePost(id: String, userId: Id<InstaCloneUser>): Boolean
-    suspend fun unlikePost(id: String, userId: Id<InstaCloneUser>): Boolean
+    suspend fun likePost(postId: String, userId: Id<InstaCloneUser>): Boolean
+    suspend fun unlikePost(postId: String, userId: Id<InstaCloneUser>): Boolean
 }
