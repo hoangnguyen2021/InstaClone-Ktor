@@ -38,7 +38,7 @@ fun Application.configureRouting(
             route("/post") {
                 uploadPostImage(storageService)
                 createPost(postDataSource, userDataSource)
-                getPostsByUser(postDataSource, userDataSource)
+                getPostsByUserId(postDataSource, userDataSource)
                 getPostById(postDataSource)
                 likePost(postDataSource, userDataSource)
                 unlikePost(postDataSource, userDataSource)

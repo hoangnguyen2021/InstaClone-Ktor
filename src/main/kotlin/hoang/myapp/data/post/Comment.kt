@@ -12,6 +12,7 @@ data class Comment(
     @Contextual val _id: Id<Comment> = newId(),
     @Contextual val authorId: Id<InstaCloneUser>,
     val content: String,
+    val isEdited: Boolean = false,
     val createdAt: Instant,
     val lastEditedAt: Instant,
     val likes: Int = 0,
