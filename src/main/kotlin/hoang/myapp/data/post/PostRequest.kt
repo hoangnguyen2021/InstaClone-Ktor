@@ -1,4 +1,4 @@
-package hoang.myapp.data.requests
+package hoang.myapp.data.post
 
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
@@ -9,5 +9,5 @@ data class PostRequest(
     val authorUsername: String,
     val createdAt: Instant,
     val lastEditedAt: Instant,
-    val mediaPaths: List<String>
+    val mediaPaths: List<String> = emptyList()
 )

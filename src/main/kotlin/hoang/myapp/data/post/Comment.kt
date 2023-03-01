@@ -16,6 +16,6 @@ data class Comment(
     val createdAt: Instant,
     val lastEditedAt: Instant,
     val likes: Int = 0,
-    @Contextual val tags: List<Id<InstaCloneUser>> = emptyList(),
+    val tags: List<String> = emptyList(),
     val replies: List<ReplyComment> = emptyList()
 )

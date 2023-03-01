@@ -42,6 +42,7 @@ fun Application.configureRouting(
                 getPostById(postDataSource)
                 likePost(postDataSource, userDataSource)
                 unlikePost(postDataSource, userDataSource)
+                commentOnPost(postDataSource, userDataSource)
             }
         }
         route("/users") {

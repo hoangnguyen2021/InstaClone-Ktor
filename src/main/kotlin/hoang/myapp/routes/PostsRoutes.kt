@@ -1,8 +1,6 @@
 package hoang.myapp.routes
 
-import hoang.myapp.data.post.InstaClonePost
-import hoang.myapp.data.post.PostDataSource
-import hoang.myapp.data.requests.PostRequest
+import hoang.myapp.data.post.*
 import hoang.myapp.data.user.UserDataSource
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -137,5 +135,39 @@ fun Route.unlikePost(
         }
 
         call.respond(HttpStatusCode.OK, "Post unliked successfully")
+    }
+}
+
+fun Route.commentOnPost(
+    postDataSource: PostDataSource,
+    userDataSource: UserDataSource
+) {
+    post("comment") {
+        val request = call.receiveNullable<CommentRequest>() ?: kotlin.run {
+            call.respond(HttpStatusCode.BadRequest)
+            return@post
+        }
+
+        val author = userDataSource.getUserById(request.authorId)
+        if (author == null) {
+            call.respond(HttpStatusCode.BadRequest)
+            return@post
+        }
+        val comment = Comment(
+            authorId = author._id,
+            content = request.content,
+            isEdited = request.isEdited,
+            createdAt = request.createdAt,
+            lastEditedAt = request.lastEditedAt,
+            likes = request.likes,
+            tags = request.tags
+        )
+        val wasAcknowledged = postDataSource.commentOnPost(request.postId, comment)
+        if (!wasAcknowledged) {
+            call.respond(HttpStatusCode.InternalServerError, "Failed to create comment")
+            return@post
+        }
+
+        call.respond(HttpStatusCode.OK, "Post created successfully")
     }
 }

@@ -41,4 +41,13 @@ class MongoPostDataSource(
             )
             .wasAcknowledged()
     }
+
+    override suspend fun commentOnPost(postId: String, comment: Comment): Boolean {
+        return posts
+            .updateOneById(
+                ObjectId(postId),
+                push(InstaClonePost::comments, comment)
+            )
+            .wasAcknowledged()
+    }
 }

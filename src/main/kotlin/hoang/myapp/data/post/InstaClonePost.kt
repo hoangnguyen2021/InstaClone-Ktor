@@ -12,6 +12,7 @@ data class InstaClonePost(
     @Contextual val _id: Id<InstaClonePost> = newId(),
     @Contextual val authorId: Id<InstaCloneUser>,
     val caption: String,
+    val isEdited: Boolean = false,
     val createdAt: Instant,
     val lastEditedAt: Instant,
     val mediaPaths: List<String> = emptyList(),
