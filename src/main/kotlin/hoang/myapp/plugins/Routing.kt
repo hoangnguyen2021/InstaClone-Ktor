@@ -40,6 +40,7 @@ fun Application.configureRouting(
                 createPost(postDataSource, userDataSource)
                 getPostsByUserId(postDataSource, userDataSource)
                 getPostById(postDataSource)
+                getCommentorsByPostId(postDataSource, userDataSource)
                 likePost(postDataSource, userDataSource)
                 unlikePost(postDataSource, userDataSource)
                 commentOnPost(postDataSource, userDataSource)

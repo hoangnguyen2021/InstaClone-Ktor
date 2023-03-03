@@ -1,6 +1,7 @@
 package hoang.myapp.routes
 
 import hoang.myapp.data.post.*
+import hoang.myapp.data.user.InstaCloneUser2
 import hoang.myapp.data.user.UserDataSource
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -58,6 +59,7 @@ fun Route.getPostsByUserId(
         }
 
         val posts = postDataSource.getPostsByUser(author._id)
+
         call.respond(HttpStatusCode.OK, posts)
     }
 }
@@ -79,6 +81,43 @@ fun Route.getPostById(
         }
 
         call.respond(HttpStatusCode.OK, post)
+    }
+}
+
+fun Route.getCommentorsByPostId(
+    postDataSource: PostDataSource,
+    userDataSource: UserDataSource
+) {
+    get("commentors-by-post-id") {
+        val postId = call.request.queryParameters["postId"]
+        if (postId == null) {
+            call.respond(HttpStatusCode.BadRequest, "Missing parameters")
+            return@get
+        }
+
+        val post = postDataSource.getPostById(postId)
+        if (post == null) {
+            call.respond(HttpStatusCode.BadRequest, "Post not found with the given id")
+            return@get
+        }
+
+        val commentorsIds = post.comments.map { it.authorId }
+        val commentors = userDataSource
+            .getUsersByIds(commentorsIds)
+            .map { user ->
+                InstaCloneUser2(
+                    _id = user._id,
+                    mobileNumber = user.mobileNumber,
+                    email = user.email,
+                    fullName = user.fullName,
+                    username = user.username,
+                    birthday = user.birthday,
+                    agreedToPolicy = user.agreedToPolicy,
+                    profilePicPath = user.profilePicPath
+                )
+            }
+
+        call.respond(HttpStatusCode.OK, commentors)
     }
 }
 
