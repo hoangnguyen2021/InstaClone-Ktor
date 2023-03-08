@@ -207,6 +207,6 @@ fun Route.commentOnPost(
             return@post
         }
 
-        call.respond(HttpStatusCode.OK, "Post created successfully")
+        call.respond(HttpStatusCode.OK, "Comment created successfully")
     }
 }
