@@ -1,6 +1,6 @@
 package hoang.myapp.routes
 
-import hoang.myapp.data.comment.CommentDataSource
+import hoang.myapp.data.comments.CommentDataSource
 import hoang.myapp.data.user.UserDataSource
 import io.ktor.http.*
 import io.ktor.server.application.*

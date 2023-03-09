@@ -1,7 +1,7 @@
 package hoang.myapp.plugins
 
-import hoang.myapp.data.comment.CommentDataSource
-import hoang.myapp.data.post.PostDataSource
+import hoang.myapp.data.comments.CommentDataSource
+import hoang.myapp.data.posts.PostDataSource
 import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.routes.*
 import hoang.myapp.security.hashing.HashingService

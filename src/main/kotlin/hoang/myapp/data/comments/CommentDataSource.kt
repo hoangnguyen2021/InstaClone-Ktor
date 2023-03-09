@@ -1,4 +1,4 @@
-package hoang.myapp.data.comment
+package hoang.myapp.data.comments
 
 import hoang.myapp.data.user.InstaCloneUser
 import org.litote.kmongo.Id

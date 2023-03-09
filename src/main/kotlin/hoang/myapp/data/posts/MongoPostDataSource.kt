@@ -1,4 +1,4 @@
-package hoang.myapp.data.post
+package hoang.myapp.data.posts
 
 import hoang.myapp.data.user.InstaCloneUser
 import org.bson.types.ObjectId

@@ -2,10 +2,9 @@ package hoang.myapp
 
 import com.twilio.Twilio
 import hoang.myapp.config.Config
-import hoang.myapp.data.comment.CommentDataSource
-import hoang.myapp.data.post.PostDataSource
+import hoang.myapp.data.comments.CommentDataSource
+import hoang.myapp.data.posts.PostDataSource
 import hoang.myapp.data.user.UserDataSource
-import hoang.myapp.data.verificationcode.VerificationCodeDataSource
 import hoang.myapp.di.KoinModule
 import io.ktor.server.application.*
 import hoang.myapp.plugins.*

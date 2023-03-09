@@ -1,4 +1,4 @@
-package hoang.myapp.data.post
+package hoang.myapp.data.comments
 
 import hoang.myapp.data.user.InstaCloneUser
 import kotlinx.datetime.Instant
@@ -12,8 +12,9 @@ data class ReplyComment(
     @Contextual val _id: Id<ReplyComment> = newId(),
     @Contextual val authorId: Id<InstaCloneUser>,
     val content: String,
+    val isEdited: Boolean = false,
     val createdAt: Instant,
     val lastEditedAt: Instant,
-    val likes: Int = 0,
-    @Contextual val tags: List<Id<InstaCloneUser>>
+    val likes: List<String> = emptyList(),
+    val tags: List<String> = emptyList()
 )

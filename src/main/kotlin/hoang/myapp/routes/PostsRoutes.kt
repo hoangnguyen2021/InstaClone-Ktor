@@ -1,9 +1,9 @@
 package hoang.myapp.routes
 
-import hoang.myapp.data.comment.Comment
-import hoang.myapp.data.comment.CommentDataSource
-import hoang.myapp.data.comment.CommentRequest
-import hoang.myapp.data.post.*
+import hoang.myapp.data.comments.Comment
+import hoang.myapp.data.comments.CommentDataSource
+import hoang.myapp.data.comments.CommentRequest
+import hoang.myapp.data.posts.*
 import hoang.myapp.data.user.InstaCloneUser2
 import hoang.myapp.data.user.UserDataSource
 import io.ktor.http.*
