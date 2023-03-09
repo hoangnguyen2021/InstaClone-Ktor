@@ -217,7 +217,6 @@ fun Route.commentOnPost(
             isEdited = request.isEdited,
             createdAt = request.createdAt,
             lastEditedAt = request.lastEditedAt,
-            likes = request.likes,
             tags = request.tags
         )
         val canCreateComment = commentDataSource.insertComment(comment)
