@@ -11,6 +11,6 @@ data class CommentRequest(
     val isEdited: Boolean = false,
     val createdAt: Instant,
     val lastEditedAt: Instant,
-    val likes: Int = 0,
+    val likes: List<String> = emptyList(),
     val tags: List<String> = emptyList()
 )

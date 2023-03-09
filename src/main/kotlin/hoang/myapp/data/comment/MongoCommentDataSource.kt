@@ -1,8 +1,12 @@
 package hoang.myapp.data.comment
 
 import hoang.myapp.data.post.Comment
+import hoang.myapp.data.user.InstaCloneUser
 import org.bson.types.ObjectId
+import org.litote.kmongo.Id
+import org.litote.kmongo.addToSet
 import org.litote.kmongo.coroutine.CoroutineDatabase
+import org.litote.kmongo.pull
 
 class MongoCommentDataSource(
     db: CoroutineDatabase
@@ -18,5 +22,23 @@ class MongoCommentDataSource(
             comments.findOneById(ObjectId(id))?.let { result.add(it) }
         }
         return result
+    }
+
+    override suspend fun likeComment(commentId: String, userId: Id<InstaCloneUser>): Boolean {
+        return comments
+            .updateOneById(
+                ObjectId(commentId),
+                addToSet(Comment::likes, userId.toString())
+            )
+            .wasAcknowledged()
+    }
+
+    override suspend fun unlikeComment(commentId: String, userId: Id<InstaCloneUser>): Boolean {
+        return comments
+            .updateOneById(
+                ObjectId(commentId),
+                pull(Comment::likes, userId.toString())
+            )
+            .wasAcknowledged()
     }
 }
