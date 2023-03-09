@@ -1,5 +1,6 @@
 package hoang.myapp.routes
 
+import hoang.myapp.data.comment.CommentDataSource
 import hoang.myapp.data.post.*
 import hoang.myapp.data.user.InstaCloneUser2
 import hoang.myapp.data.user.UserDataSource
@@ -8,6 +9,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.litote.kmongo.newId
 
 fun Route.createPost(
     postDataSource: PostDataSource,
@@ -43,7 +45,8 @@ fun Route.createPost(
 
 fun Route.getPostsByUserId(
     postDataSource: PostDataSource,
-    userDataSource: UserDataSource
+    userDataSource: UserDataSource,
+    commentDataSource: CommentDataSource
 ) {
     get("posts-by-user-id") {
         val userId = call.request.queryParameters["userId"]
@@ -60,12 +63,18 @@ fun Route.getPostsByUserId(
 
         val posts = postDataSource.getPostsByUser(author._id)
 
-        call.respond(HttpStatusCode.OK, posts)
+        call.respond(
+            HttpStatusCode.OK,
+            posts.map { post ->
+                post.mapToInstaClonePost2(commentDataSource.findCommentsByIds(post.comments))
+            }
+        )
     }
 }
 
 fun Route.getPostById(
-    postDataSource: PostDataSource
+    postDataSource: PostDataSource,
+    commentDataSource: CommentDataSource
 ) {
     get("post-by-id") {
         val id = call.request.queryParameters["id"]
@@ -79,14 +88,16 @@ fun Route.getPostById(
             call.respond(HttpStatusCode.BadRequest, "Post not found with the given id")
             return@get
         }
+        val comments = commentDataSource.findCommentsByIds(post.comments)
 
-        call.respond(HttpStatusCode.OK, post)
+        call.respond(HttpStatusCode.OK, post.mapToInstaClonePost2(comments))
     }
 }
 
 fun Route.getCommentorsByPostId(
     postDataSource: PostDataSource,
-    userDataSource: UserDataSource
+    userDataSource: UserDataSource,
+    commentDataSource: CommentDataSource
 ) {
     get("commentors-by-post-id") {
         val postId = call.request.queryParameters["postId"]
@@ -101,7 +112,9 @@ fun Route.getCommentorsByPostId(
             return@get
         }
 
-        val commentorsIds = post.comments.map { it.authorId }
+        val commentorsIds = commentDataSource
+            .findCommentsByIds(post.comments)
+            .map { it.authorId }
         val commentors = userDataSource
             .getUsersByIds(commentorsIds)
             .map { user ->
@@ -179,7 +192,8 @@ fun Route.unlikePost(
 
 fun Route.commentOnPost(
     postDataSource: PostDataSource,
-    userDataSource: UserDataSource
+    userDataSource: UserDataSource,
+    commentDataSource: CommentDataSource
 ) {
     post("comment") {
         val request = call.receiveNullable<CommentRequest>() ?: kotlin.run {
@@ -192,7 +206,9 @@ fun Route.commentOnPost(
             call.respond(HttpStatusCode.BadRequest)
             return@post
         }
+        val commentId = newId<Comment>()
         val comment = Comment(
+            _id = commentId,
             authorId = author._id,
             content = request.content,
             isEdited = request.isEdited,
@@ -201,12 +217,17 @@ fun Route.commentOnPost(
             likes = request.likes,
             tags = request.tags
         )
-        val wasAcknowledged = postDataSource.commentOnPost(request.postId, comment)
-        if (!wasAcknowledged) {
+        val canCreateComment = commentDataSource.insertComment(comment)
+        if (!canCreateComment) {
             call.respond(HttpStatusCode.InternalServerError, "Failed to create comment")
             return@post
         }
+        val canCommentOnPost = postDataSource.commentOnPost(request.postId, commentId.toString())
+        if (!canCommentOnPost) {
+            call.respond(HttpStatusCode.InternalServerError, "Failed to comment on post")
+            return@post
+        }
 
-        call.respond(HttpStatusCode.OK, "Comment created successfully")
+        call.respond(HttpStatusCode.OK, "Comment on post successfully")
     }
 }

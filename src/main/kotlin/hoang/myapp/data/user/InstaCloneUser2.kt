@@ -14,5 +14,7 @@ data class InstaCloneUser2(
     val username: String,
     val birthday: LocalDate,
     val agreedToPolicy: Boolean = false,
-    val profilePicPath: String? = null
+    val profilePicPath: String? = null,
+    val followers: List<String> = emptyList(),
+    val following: List<String> = emptyList()
 )

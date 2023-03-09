@@ -9,5 +9,5 @@ interface PostDataSource {
     suspend fun getPostById(id: String): InstaClonePost?
     suspend fun likePost(postId: String, userId: Id<InstaCloneUser>): Boolean
     suspend fun unlikePost(postId: String, userId: Id<InstaCloneUser>): Boolean
-    suspend fun commentOnPost(postId: String, comment: Comment): Boolean
+    suspend fun commentOnPost(postId: String, commentId: String): Boolean
 }

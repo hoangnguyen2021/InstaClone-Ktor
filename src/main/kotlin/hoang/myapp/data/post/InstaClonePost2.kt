@@ -8,7 +8,7 @@ import org.litote.kmongo.Id
 import org.litote.kmongo.newId
 
 @Serializable
-data class InstaClonePost(
+data class InstaClonePost2(
     @Contextual val _id: Id<InstaClonePost> = newId(),
     @Contextual val authorId: Id<InstaCloneUser>,
     val caption: String,
@@ -18,20 +18,5 @@ data class InstaClonePost(
     val mediaPaths: List<String> = emptyList(),
     val likes: List<String> = emptyList(),
     val tags: List<String> = emptyList(),
-    val comments: List<String> = emptyList()
+    val comments: List<Comment> = emptyList()
 )
-
-fun InstaClonePost.mapToInstaClonePost2(comments: List<Comment>): InstaClonePost2 {
-    return InstaClonePost2(
-        _id = _id,
-        authorId = authorId,
-        caption = caption,
-        isEdited = isEdited,
-        createdAt = createdAt,
-        lastEditedAt = lastEditedAt,
-        mediaPaths = mediaPaths,
-        likes = likes,
-        tags = tags,
-        comments = comments
-    )
-}
