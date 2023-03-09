@@ -26,6 +26,7 @@ fun Route.createPost(
             call.respond(HttpStatusCode.BadRequest)
             return@post
         }
+
         val instaClonePost = InstaClonePost(
             authorId = author._id,
             caption = request.caption,
@@ -33,8 +34,8 @@ fun Route.createPost(
             lastEditedAt = request.lastEditedAt,
             mediaPaths = request.mediaPaths
         )
-        val wasAcknowledged = postDataSource.insertPost(instaClonePost)
-        if (!wasAcknowledged) {
+        val canCreatePost = postDataSource.insertPost(instaClonePost)
+        if (!canCreatePost) {
             call.respond(HttpStatusCode.InternalServerError, "Failed to create post")
             return@post
         }
@@ -138,24 +139,24 @@ fun Route.likePost(
     postDataSource: PostDataSource,
     userDataSource: UserDataSource
 ) {
-    get("like") {
+    put("like") {
         val postId = call.request.queryParameters["postId"]
         val userId = call.request.queryParameters["userId"]
         if (postId == null || userId == null) {
             call.respond(HttpStatusCode.BadRequest, "Missing parameters")
-            return@get
+            return@put
         }
 
         val user = userDataSource.getUserById(userId)
         if (user == null) {
             call.respond(HttpStatusCode.BadRequest, "User not found with the given id")
-            return@get
+            return@put
         }
 
         val wasAcknowledge = postDataSource.likePost(postId, user._id)
         if (!wasAcknowledge) {
             call.respond(HttpStatusCode.InternalServerError, "Failed to like post")
-            return@get
+            return@put
         }
 
         call.respond(HttpStatusCode.OK, "Post liked successfully")
@@ -166,24 +167,24 @@ fun Route.unlikePost(
     postDataSource: PostDataSource,
     userDataSource: UserDataSource
 ) {
-    get("unlike") {
+    put("unlike") {
         val postId = call.request.queryParameters["postId"]
         val userId = call.request.queryParameters["userId"]
         if (postId == null || userId == null) {
             call.respond(HttpStatusCode.BadRequest, "Missing parameters")
-            return@get
+            return@put
         }
 
         val user = userDataSource.getUserById(userId)
         if (user == null) {
             call.respond(HttpStatusCode.BadRequest, "User not found with the given id")
-            return@get
+            return@put
         }
 
         val wasAcknowledge = postDataSource.unlikePost(postId, user._id)
         if (!wasAcknowledge) {
             call.respond(HttpStatusCode.InternalServerError, "Failed to unlike post")
-            return@get
+            return@put
         }
 
         call.respond(HttpStatusCode.OK, "Post unliked successfully")
