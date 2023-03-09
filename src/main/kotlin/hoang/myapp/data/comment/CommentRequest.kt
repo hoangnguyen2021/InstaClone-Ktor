@@ -1,4 +1,4 @@
-package hoang.myapp.data.post
+package hoang.myapp.data.comment
 
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable

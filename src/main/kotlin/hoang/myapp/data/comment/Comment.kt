@@ -1,5 +1,6 @@
-package hoang.myapp.data.post
+package hoang.myapp.data.comment
 
+import hoang.myapp.data.post.ReplyComment
 import hoang.myapp.data.user.InstaCloneUser
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Contextual
