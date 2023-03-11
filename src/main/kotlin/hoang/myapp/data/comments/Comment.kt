@@ -19,3 +19,17 @@ data class Comment(
     val tags: List<String> = emptyList(),
     val replies: List<String> = emptyList()
 )
+
+fun Comment.convertToComment2(replies: List<ReplyComment>): Comment2 {
+    return Comment2(
+        _id = _id,
+        authorId = authorId,
+        content = content,
+        isEdited = isEdited,
+        createdAt = createdAt,
+        lastEditedAt = lastEditedAt,
+        likes = likes,
+        tags = tags,
+        replies = replies
+    )
+}

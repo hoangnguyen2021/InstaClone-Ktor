@@ -1,6 +1,7 @@
 package hoang.myapp.data.posts
 
 import hoang.myapp.data.comments.Comment
+import hoang.myapp.data.comments.Comment2
 import hoang.myapp.data.user.InstaCloneUser
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Contextual
@@ -22,7 +23,7 @@ data class InstaClonePost(
     val comments: List<String> = emptyList()
 )
 
-fun InstaClonePost.mapToInstaClonePost2(comments: List<Comment>): InstaClonePost2 {
+fun InstaClonePost.convertToInstaClonePost2(comments: List<Comment2>): InstaClonePost2 {
     return InstaClonePost2(
         _id = _id,
         authorId = authorId,

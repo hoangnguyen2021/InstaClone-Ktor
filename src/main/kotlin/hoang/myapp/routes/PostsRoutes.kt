@@ -1,8 +1,6 @@
 package hoang.myapp.routes
 
-import hoang.myapp.data.comments.Comment
-import hoang.myapp.data.comments.CommentDataSource
-import hoang.myapp.data.comments.CommentRequest
+import hoang.myapp.data.comments.*
 import hoang.myapp.data.posts.*
 import hoang.myapp.data.user.InstaCloneUser2
 import hoang.myapp.data.user.UserDataSource
@@ -49,7 +47,8 @@ fun Route.createPost(
 fun Route.getPostsByUserId(
     postDataSource: PostDataSource,
     userDataSource: UserDataSource,
-    commentDataSource: CommentDataSource
+    commentDataSource: CommentDataSource,
+    replyCommentDataSource: ReplyCommentDataSource
 ) {
     get("posts-by-user-id") {
         val userId = call.request.queryParameters["userId"]
@@ -65,19 +64,27 @@ fun Route.getPostsByUserId(
         }
 
         val posts = postDataSource.getPostsByUser(author._id)
-
-        call.respond(
-            HttpStatusCode.OK,
+        val response =
             posts.map { post ->
-                post.mapToInstaClonePost2(commentDataSource.findCommentsByIds(post.comments))
+                post.convertToInstaClonePost2(
+                    commentDataSource
+                        .findCommentsByIds(post.comments)
+                        .map { comment ->
+                            comment.convertToComment2(
+                                replyCommentDataSource.findReplyCommentsByIds(comment.replies)
+                            )
+                        }
+                )
             }
-        )
+
+        call.respond(HttpStatusCode.OK, response)
     }
 }
 
 fun Route.getPostById(
     postDataSource: PostDataSource,
-    commentDataSource: CommentDataSource
+    commentDataSource: CommentDataSource,
+    replyCommentDataSource: ReplyCommentDataSource
 ) {
     get("post-by-id") {
         val id = call.request.queryParameters["id"]
@@ -92,8 +99,16 @@ fun Route.getPostById(
             return@get
         }
         val comments = commentDataSource.findCommentsByIds(post.comments)
+        val response =
+            post.convertToInstaClonePost2(
+                comments.map {
+                    it.convertToComment2(
+                        replyCommentDataSource.findReplyCommentsByIds(it.replies)
+                    )
+                }
+            )
 
-        call.respond(HttpStatusCode.OK, post.mapToInstaClonePost2(comments))
+        call.respond(HttpStatusCode.OK, response)
     }
 }
 
