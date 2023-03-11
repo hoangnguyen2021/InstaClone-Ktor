@@ -1,6 +1,7 @@
 package hoang.myapp.data.comments
 
 import hoang.myapp.data.user.InstaCloneUser
+import hoang.myapp.data.user.InstaCloneUser2
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -20,7 +21,7 @@ data class Comment(
     val replies: List<String> = emptyList()
 )
 
-fun Comment.toComment2(author: InstaCloneUser, replies: List<ReplyComment2>): Comment2 {
+fun Comment.toComment2(author: InstaCloneUser2, replies: List<ReplyComment2>): Comment2 {
     return Comment2(
         _id = _id,
         author = author,

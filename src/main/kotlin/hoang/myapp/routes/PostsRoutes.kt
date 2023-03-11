@@ -4,6 +4,7 @@ import hoang.myapp.data.comments.*
 import hoang.myapp.data.posts.*
 import hoang.myapp.data.user.InstaCloneUser2
 import hoang.myapp.data.user.UserDataSource
+import hoang.myapp.data.user.toInstaCloneUser2
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -71,12 +72,16 @@ fun Route.getPostsByUserId(
                         .findCommentsByIds(post.comments)
                         .map { comment ->
                             comment.toComment2(
-                                userDataSource.findUserById(comment.authorId.toString())!!,
+                                userDataSource
+                                    .findUserById(comment.authorId.toString())!!
+                                    .toInstaCloneUser2(),
                                 replyCommentDataSource
                                     .findReplyCommentsByIds(comment.replies)
                                     .map { replyComment ->
                                         replyComment.toReplyComment2(
-                                            userDataSource.findUserById(replyComment.authorId.toString())!!
+                                            userDataSource
+                                                .findUserById(replyComment.authorId.toString())!!
+                                                .toInstaCloneUser2()
                                         )
                                     }
                             )
@@ -111,12 +116,16 @@ fun Route.getPostById(
             post.toInstaClonePost2(
                 comments.map { comment ->
                     comment.toComment2(
-                        userDataSource.findUserById(comment.authorId.toString())!!,
+                        userDataSource
+                            .findUserById(comment.authorId.toString())!!
+                            .toInstaCloneUser2(),
                         replyCommentDataSource
                             .findReplyCommentsByIds(comment.replies)
                             .map { replyComment ->
                                 replyComment.toReplyComment2(
-                                    userDataSource.findUserById(replyComment.authorId.toString())!!
+                                    userDataSource
+                                        .findUserById(replyComment.authorId.toString())!!
+                                        .toInstaCloneUser2()
                                 )
                             }
                     )

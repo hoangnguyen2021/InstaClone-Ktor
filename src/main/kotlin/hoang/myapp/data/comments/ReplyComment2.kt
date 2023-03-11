@@ -1,6 +1,6 @@
 package hoang.myapp.data.comments
 
-import hoang.myapp.data.user.InstaCloneUser
+import hoang.myapp.data.user.InstaCloneUser2
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -10,7 +10,7 @@ import org.litote.kmongo.newId
 @Serializable
 data class ReplyComment2(
     @Contextual val _id: Id<ReplyComment> = newId(),
-    val author: InstaCloneUser,
+    val author: InstaCloneUser2,
     val content: String,
     val isEdited: Boolean = false,
     val createdAt: Instant,

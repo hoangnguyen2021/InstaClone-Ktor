@@ -21,3 +21,16 @@ data class InstaCloneUser(
     val followers: List<String> = emptyList(),
     val following: List<String> = emptyList()
 )
+
+fun InstaCloneUser.toInstaCloneUser2(): InstaCloneUser2 {
+    return InstaCloneUser2(
+        _id = _id,
+        mobileNumber = mobileNumber,
+        email = email,
+        fullName = fullName,
+        username = username,
+        birthday = birthday,
+        agreedToPolicy = agreedToPolicy,
+        profilePicPath = profilePicPath
+    )
+}

@@ -2,6 +2,7 @@ package hoang.myapp.routes
 
 import hoang.myapp.data.user.InstaCloneUser2
 import hoang.myapp.data.user.UserDataSource
+import hoang.myapp.data.user.toInstaCloneUser2
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -23,18 +24,6 @@ fun Route.getUserById(
             return@get
         }
 
-        call.respond(
-            HttpStatusCode.OK,
-            InstaCloneUser2(
-                _id = user._id,
-                mobileNumber = user.mobileNumber,
-                email = user.email,
-                fullName = user.fullName,
-                username = user.username,
-                birthday = user.birthday,
-                agreedToPolicy = user.agreedToPolicy,
-                profilePicPath = user.profilePicPath
-            )
-        )
+        call.respond(HttpStatusCode.OK, user.toInstaCloneUser2())
     }
 }
