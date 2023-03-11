@@ -21,7 +21,7 @@ fun Route.likeComment(
             return@put
         }
 
-        val user = userDataSource.getUserById(userId)
+        val user = userDataSource.findUserById(userId)
         if (user == null) {
             call.respond(HttpStatusCode.BadRequest, "User not found with the given id")
             return@put
@@ -49,7 +49,7 @@ fun Route.unlikeComment(
             return@put
         }
 
-        val user = userDataSource.getUserById(userId)
+        val user = userDataSource.findUserById(userId)
         if (user == null) {
             call.respond(HttpStatusCode.BadRequest, "User not found with the given id")
             return@put
@@ -76,7 +76,7 @@ fun Route.replyToComment(
             return@post
         }
 
-        val author = userDataSource.getUserById(request.authorId)
+        val author = userDataSource.findUserById(request.authorId)
         if (author == null) {
             call.respond(HttpStatusCode.BadRequest)
             return@post

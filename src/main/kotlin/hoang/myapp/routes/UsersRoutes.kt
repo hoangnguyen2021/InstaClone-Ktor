@@ -17,7 +17,7 @@ fun Route.getUserById(
             return@get
         }
 
-        val user = userDataSource.getUserById(id)
+        val user = userDataSource.findUserById(id)
         if (user == null) {
             call.respond(HttpStatusCode.BadRequest, "User not found with the given id")
             return@get

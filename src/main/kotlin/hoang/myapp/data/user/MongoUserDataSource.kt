@@ -10,23 +10,23 @@ class MongoUserDataSource(
     db: CoroutineDatabase
 ): UserDataSource {
     private val users = db.getCollection<InstaCloneUser>()
-    override suspend fun getUserById(id: String): InstaCloneUser? {
+    override suspend fun findUserById(id: String): InstaCloneUser? {
         return users.findOneById(ObjectId(id))
     }
 
-    override suspend fun getUserByUsername(username: String): InstaCloneUser? {
+    override suspend fun findUserByUsername(username: String): InstaCloneUser? {
         return users.findOne(InstaCloneUser::username eq username)
     }
 
-    override suspend fun getUserByMobileNumber(mobileNumber: Long): InstaCloneUser? {
+    override suspend fun findUserByMobileNumber(mobileNumber: Long): InstaCloneUser? {
         return users.findOne(InstaCloneUser::mobileNumber / MobileNumber::number eq mobileNumber)
     }
 
-    override suspend fun getUserByEmail(email: String): InstaCloneUser? {
+    override suspend fun findUserByEmail(email: String): InstaCloneUser? {
         return users.findOne(InstaCloneUser::email / Email::email eq email)
     }
 
-    override suspend fun getUsersByIds(ids: List<Id<InstaCloneUser>>): List<InstaCloneUser> {
+    override suspend fun findUsersByIds(ids: List<Id<InstaCloneUser>>): List<InstaCloneUser> {
         val result = mutableListOf<InstaCloneUser>()
         ids.forEach { id ->
             users.findOneById(id)?.let { result.add(it) }

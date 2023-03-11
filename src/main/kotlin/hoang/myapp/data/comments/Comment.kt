@@ -20,10 +20,10 @@ data class Comment(
     val replies: List<String> = emptyList()
 )
 
-fun Comment.convertToComment2(replies: List<ReplyComment>): Comment2 {
+fun Comment.toComment2(author: InstaCloneUser, replies: List<ReplyComment2>): Comment2 {
     return Comment2(
         _id = _id,
-        authorId = authorId,
+        author = author,
         content = content,
         isEdited = isEdited,
         createdAt = createdAt,

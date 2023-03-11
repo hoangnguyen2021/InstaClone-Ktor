@@ -21,7 +21,7 @@ fun Route.createPost(
             return@post
         }
 
-        val author = userDataSource.getUserByUsername(request.authorUsername)
+        val author = userDataSource.findUserByUsername(request.authorUsername)
         if (author == null) {
             call.respond(HttpStatusCode.BadRequest)
             return@post
@@ -57,7 +57,7 @@ fun Route.getPostsByUserId(
             return@get
         }
 
-        val author = userDataSource.getUserById(userId)
+        val author = userDataSource.findUserById(userId)
         if (author == null) {
             call.respond(HttpStatusCode.BadRequest)
             return@get
@@ -66,12 +66,19 @@ fun Route.getPostsByUserId(
         val posts = postDataSource.getPostsByUser(author._id)
         val response =
             posts.map { post ->
-                post.convertToInstaClonePost2(
+                post.toInstaClonePost2(
                     commentDataSource
                         .findCommentsByIds(post.comments)
                         .map { comment ->
-                            comment.convertToComment2(
-                                replyCommentDataSource.findReplyCommentsByIds(comment.replies)
+                            comment.toComment2(
+                                userDataSource.findUserById(comment.authorId.toString())!!,
+                                replyCommentDataSource
+                                    .findReplyCommentsByIds(comment.replies)
+                                    .map { replyComment ->
+                                        replyComment.toReplyComment2(
+                                            userDataSource.findUserById(replyComment.authorId.toString())!!
+                                        )
+                                    }
                             )
                         }
                 )
@@ -83,6 +90,7 @@ fun Route.getPostsByUserId(
 
 fun Route.getPostById(
     postDataSource: PostDataSource,
+    userDataSource: UserDataSource,
     commentDataSource: CommentDataSource,
     replyCommentDataSource: ReplyCommentDataSource
 ) {
@@ -100,10 +108,17 @@ fun Route.getPostById(
         }
         val comments = commentDataSource.findCommentsByIds(post.comments)
         val response =
-            post.convertToInstaClonePost2(
-                comments.map {
-                    it.convertToComment2(
-                        replyCommentDataSource.findReplyCommentsByIds(it.replies)
+            post.toInstaClonePost2(
+                comments.map { comment ->
+                    comment.toComment2(
+                        userDataSource.findUserById(comment.authorId.toString())!!,
+                        replyCommentDataSource
+                            .findReplyCommentsByIds(comment.replies)
+                            .map { replyComment ->
+                                replyComment.toReplyComment2(
+                                    userDataSource.findUserById(replyComment.authorId.toString())!!
+                                )
+                            }
                     )
                 }
             )
@@ -134,7 +149,7 @@ fun Route.getCommentorsByPostId(
             .findCommentsByIds(post.comments)
             .map { it.authorId }
         val commentors = userDataSource
-            .getUsersByIds(commentorsIds)
+            .findUsersByIds(commentorsIds)
             .map { user ->
                 InstaCloneUser2(
                     _id = user._id,
@@ -164,7 +179,7 @@ fun Route.likePost(
             return@put
         }
 
-        val user = userDataSource.getUserById(userId)
+        val user = userDataSource.findUserById(userId)
         if (user == null) {
             call.respond(HttpStatusCode.BadRequest, "User not found with the given id")
             return@put
@@ -192,7 +207,7 @@ fun Route.unlikePost(
             return@put
         }
 
-        val user = userDataSource.getUserById(userId)
+        val user = userDataSource.findUserById(userId)
         if (user == null) {
             call.respond(HttpStatusCode.BadRequest, "User not found with the given id")
             return@put
@@ -219,7 +234,7 @@ fun Route.commentOnPost(
             return@post
         }
 
-        val author = userDataSource.getUserById(request.authorId)
+        val author = userDataSource.findUserById(request.authorId)
         if (author == null) {
             call.respond(HttpStatusCode.BadRequest)
             return@post

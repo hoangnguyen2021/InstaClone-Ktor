@@ -112,11 +112,11 @@ fun Route.signIn(
         }
 
         val user = if (request.username != null) {
-            userDataSource.getUserByUsername(request.username)
+            userDataSource.findUserByUsername(request.username)
         } else if (request.email != null) {
-            userDataSource.getUserByEmail(request.email)
+            userDataSource.findUserByEmail(request.email)
         } else if (request.mobileNumber != null) {
-            userDataSource.getUserByMobileNumber(request.mobileNumber)
+            userDataSource.findUserByMobileNumber(request.mobileNumber)
         } else {
             call.respond(HttpStatusCode.BadRequest)
             return@post

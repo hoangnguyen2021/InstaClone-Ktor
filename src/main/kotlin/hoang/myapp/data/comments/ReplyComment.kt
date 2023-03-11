@@ -18,3 +18,16 @@ data class ReplyComment(
     val likes: List<String> = emptyList(),
     val tags: List<String> = emptyList()
 )
+
+fun ReplyComment.toReplyComment2(author: InstaCloneUser): ReplyComment2 {
+    return ReplyComment2(
+        _id = _id,
+        author = author,
+        content = content,
+        isEdited = isEdited,
+        createdAt = createdAt,
+        lastEditedAt = lastEditedAt,
+        likes = likes,
+        tags = tags
+    )
+}

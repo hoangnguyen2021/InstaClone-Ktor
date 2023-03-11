@@ -8,14 +8,13 @@ import org.litote.kmongo.Id
 import org.litote.kmongo.newId
 
 @Serializable
-data class Comment2(
-    @Contextual val _id: Id<Comment> = newId(),
+data class ReplyComment2(
+    @Contextual val _id: Id<ReplyComment> = newId(),
     val author: InstaCloneUser,
     val content: String,
     val isEdited: Boolean = false,
     val createdAt: Instant,
     val lastEditedAt: Instant,
     val likes: List<String> = emptyList(),
-    val tags: List<String> = emptyList(),
-    val replies: List<ReplyComment2> = emptyList()
+    val tags: List<String> = emptyList()
 )
