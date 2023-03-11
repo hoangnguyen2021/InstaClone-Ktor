@@ -17,5 +17,5 @@ data class Comment(
     val lastEditedAt: Instant,
     val likes: List<String> = emptyList(),
     val tags: List<String> = emptyList(),
-    val replies: List<ReplyComment> = emptyList()
+    val replies: List<String> = emptyList()
 )

@@ -1,6 +1,7 @@
 package hoang.myapp.plugins
 
 import hoang.myapp.data.comments.CommentDataSource
+import hoang.myapp.data.comments.ReplyCommentDataSource
 import hoang.myapp.data.posts.PostDataSource
 import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.routes.*
@@ -21,7 +22,8 @@ fun Application.configureRouting(
     tokenService: TokenService,
     tokenConfig: TokenConfig,
     postDataSource: PostDataSource,
-    commentDataSource: CommentDataSource
+    commentDataSource: CommentDataSource,
+    replyCommentDataSource: ReplyCommentDataSource
 ) {
     routing {
         route("/auth") {
@@ -47,9 +49,10 @@ fun Application.configureRouting(
                 unlikePost(postDataSource, userDataSource)
                 commentOnPost(postDataSource, userDataSource, commentDataSource)
             }
-            route("comment") {
+            route("/comment") {
                 likeComment(commentDataSource, userDataSource)
                 unlikeComment(commentDataSource, userDataSource)
+                replyToComment(commentDataSource, userDataSource, replyCommentDataSource)
             }
         }
         route("/users") {

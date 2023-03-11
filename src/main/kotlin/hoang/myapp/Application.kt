@@ -3,6 +3,7 @@ package hoang.myapp
 import com.twilio.Twilio
 import hoang.myapp.config.Config
 import hoang.myapp.data.comments.CommentDataSource
+import hoang.myapp.data.comments.ReplyCommentDataSource
 import hoang.myapp.data.posts.PostDataSource
 import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.di.KoinModule
@@ -49,6 +50,7 @@ fun Application.module() {
     val hashingService: HashingService by inject()
     val postDataSource: PostDataSource by inject()
     val commentDataSource: CommentDataSource by inject()
+    val replyCommentDataSource: ReplyCommentDataSource by inject()
 
     // init Twilio
     Twilio.init(Config.TWILIO_USERNAME, Config.TWILIO_PASSWORD)
@@ -73,6 +75,7 @@ fun Application.module() {
         tokenService,
         tokenConfig,
         postDataSource,
-        commentDataSource
+        commentDataSource,
+        replyCommentDataSource
     )
 }

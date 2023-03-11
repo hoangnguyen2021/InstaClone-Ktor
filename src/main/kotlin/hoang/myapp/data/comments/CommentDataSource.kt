@@ -8,4 +8,5 @@ interface CommentDataSource {
     suspend fun findCommentsByIds(ids: List<String>): List<Comment>
     suspend fun likeComment(commentId: String, userId: Id<InstaCloneUser>): Boolean
     suspend fun unlikeComment(commentId: String, userId: Id<InstaCloneUser>): Boolean
+    suspend fun replyToComment(commentId: String, replyCommentId: String): Boolean
 }

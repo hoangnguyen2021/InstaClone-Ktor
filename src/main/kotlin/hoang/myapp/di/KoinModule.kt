@@ -7,6 +7,8 @@ import hoang.myapp.config.Config.MONGODB_DB_NAME
 import hoang.myapp.config.Config.MONGODB_CONNECTION_STRING
 import hoang.myapp.data.comments.CommentDataSource
 import hoang.myapp.data.comments.MongoCommentDataSource
+import hoang.myapp.data.comments.MongoReplyCommentDataSource
+import hoang.myapp.data.comments.ReplyCommentDataSource
 import hoang.myapp.data.posts.MongoPostDataSource
 import hoang.myapp.data.posts.PostDataSource
 import hoang.myapp.data.user.MongoUserDataSource
@@ -55,5 +57,6 @@ object KoinModule {
         singleOf<HashingService>(::Password4jHashingService)
         singleOf<PostDataSource, CoroutineDatabase>(::MongoPostDataSource)
         singleOf<CommentDataSource, CoroutineDatabase>(::MongoCommentDataSource)
+        singleOf<ReplyCommentDataSource, CoroutineDatabase>(::MongoReplyCommentDataSource)
     }
 }
