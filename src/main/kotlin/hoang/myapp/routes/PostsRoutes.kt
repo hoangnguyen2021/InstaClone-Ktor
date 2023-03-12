@@ -67,19 +67,19 @@ fun Route.getPostsByUserId(
         val response =
             posts.map { post ->
                 post.toInstaClonePost2(
-                    author.toInstaCloneUser2(),
-                    commentDataSource
+                    author = author.toInstaCloneUser2(),
+                    comments = commentDataSource
                         .findCommentsByIds(post.comments)
                         .map { comment ->
                             comment.toComment2(
-                                userDataSource
+                                author = userDataSource
                                     .findUserById(comment.authorId.toString())!!
                                     .toInstaCloneUser2(),
-                                replyCommentDataSource
+                                replies = replyCommentDataSource
                                     .findReplyCommentsByIds(comment.replies)
                                     .map { replyComment ->
                                         replyComment.toReplyComment2(
-                                            userDataSource
+                                            author = userDataSource
                                                 .findUserById(replyComment.authorId.toString())!!
                                                 .toInstaCloneUser2()
                                         )
@@ -114,17 +114,17 @@ fun Route.getPostById(
         val comments = commentDataSource.findCommentsByIds(post.comments)
         val response =
             post.toInstaClonePost2(
-                userDataSource.findUserById(post.authorId.toString())!!.toInstaCloneUser2(),
-                comments.map { comment ->
+                author = userDataSource.findUserById(post.authorId.toString())!!.toInstaCloneUser2(),
+                comments = comments.map { comment ->
                     comment.toComment2(
-                        userDataSource
+                        author = userDataSource
                             .findUserById(comment.authorId.toString())!!
                             .toInstaCloneUser2(),
-                        replyCommentDataSource
+                        replies = replyCommentDataSource
                             .findReplyCommentsByIds(comment.replies)
                             .map { replyComment ->
                                 replyComment.toReplyComment2(
-                                    userDataSource
+                                    author = userDataSource
                                         .findUserById(replyComment.authorId.toString())!!
                                         .toInstaCloneUser2()
                                 )

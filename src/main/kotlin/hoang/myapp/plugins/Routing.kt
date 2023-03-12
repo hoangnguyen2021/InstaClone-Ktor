@@ -39,7 +39,7 @@ fun Application.configureRouting(
                 uploadProfilePic(storageService)
                 getProfilePic(storageService)
             }
-            route("/post") {
+            route("/posts") {
                 uploadPostImage(storageService)
                 createPost(postDataSource, userDataSource)
                 getPostsByUserId(postDataSource, userDataSource, commentDataSource, replyCommentDataSource)
@@ -48,10 +48,14 @@ fun Application.configureRouting(
                 unlikePost(postDataSource, userDataSource)
                 commentOnPost(postDataSource, userDataSource, commentDataSource)
             }
-            route("/comment") {
+            route("/comments") {
                 likeComment(commentDataSource, userDataSource)
                 unlikeComment(commentDataSource, userDataSource)
                 replyToComment(commentDataSource, userDataSource, replyCommentDataSource)
+            }
+            route("/reply-comments") {
+                likeReplyComment(replyCommentDataSource, userDataSource)
+                unlikeReplyComment(replyCommentDataSource, userDataSource)
             }
         }
         route("/users") {

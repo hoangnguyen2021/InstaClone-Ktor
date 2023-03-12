@@ -11,8 +11,8 @@ class MongoReplyCommentDataSource(
     db: CoroutineDatabase
 ): ReplyCommentDataSource {
     private val replyComments = db.getCollection<ReplyComment>()
-    override suspend fun insertReplyComment(comment: ReplyComment): Boolean {
-        return replyComments.insertOne(comment).wasAcknowledged()
+    override suspend fun insertReplyComment(replyComment: ReplyComment): Boolean {
+        return replyComments.insertOne(replyComment).wasAcknowledged()
     }
 
     override suspend fun findReplyCommentsByIds(ids: List<String>): List<ReplyComment> {
@@ -23,19 +23,19 @@ class MongoReplyCommentDataSource(
         return result
     }
 
-    override suspend fun likeReplyComment(commentId: String, userId: Id<InstaCloneUser>): Boolean {
+    override suspend fun likeReplyComment(replyCommentId: String, userId: Id<InstaCloneUser>): Boolean {
         return replyComments
             .updateOneById(
-                ObjectId(commentId),
+                ObjectId(replyCommentId),
                 addToSet(Comment::likes, userId.toString())
             )
             .wasAcknowledged()
     }
 
-    override suspend fun unlikeReplyComment(commentId: String, userId: Id<InstaCloneUser>): Boolean {
+    override suspend fun unlikeReplyComment(replyCommentId: String, userId: Id<InstaCloneUser>): Boolean {
         return replyComments
             .updateOneById(
-                ObjectId(commentId),
+                ObjectId(replyCommentId),
                 pull(Comment::likes, userId.toString())
             )
             .wasAcknowledged()

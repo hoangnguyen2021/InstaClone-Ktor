@@ -27,8 +27,8 @@ fun Route.likeComment(
             return@put
         }
 
-        val wasAcknowledge = commentDataSource.likeComment(commentId, user._id)
-        if (!wasAcknowledge) {
+        val canLikeComment = commentDataSource.likeComment(commentId, user._id)
+        if (!canLikeComment) {
             call.respond(HttpStatusCode.InternalServerError, "Failed to like comment")
             return@put
         }
@@ -55,8 +55,8 @@ fun Route.unlikeComment(
             return@put
         }
 
-        val wasAcknowledge = commentDataSource.unlikeComment(commentId, user._id)
-        if (!wasAcknowledge) {
+        val canUnlikeComment = commentDataSource.unlikeComment(commentId, user._id)
+        if (!canUnlikeComment) {
             call.respond(HttpStatusCode.InternalServerError, "Failed to unlike comment")
             return@put
         }
