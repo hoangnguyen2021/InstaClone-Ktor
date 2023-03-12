@@ -1,6 +1,5 @@
 package hoang.myapp.routes
 
-import hoang.myapp.data.user.InstaCloneUser2
 import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.data.user.toInstaCloneUser2
 import io.ktor.http.*

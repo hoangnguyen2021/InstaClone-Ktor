@@ -136,46 +136,6 @@ fun Route.getPostById(
     }
 }
 
-fun Route.getCommentorsByPostId(
-    postDataSource: PostDataSource,
-    userDataSource: UserDataSource,
-    commentDataSource: CommentDataSource
-) {
-    get("commentors-by-post-id") {
-        val postId = call.request.queryParameters["postId"]
-        if (postId == null) {
-            call.respond(HttpStatusCode.BadRequest, "Missing parameters")
-            return@get
-        }
-
-        val post = postDataSource.getPostById(postId)
-        if (post == null) {
-            call.respond(HttpStatusCode.BadRequest, "Post not found with the given id")
-            return@get
-        }
-
-        val commentorsIds = commentDataSource
-            .findCommentsByIds(post.comments)
-            .map { it.authorId }
-        val commentors = userDataSource
-            .findUsersByIds(commentorsIds)
-            .map { user ->
-                InstaCloneUser2(
-                    _id = user._id,
-                    mobileNumber = user.mobileNumber,
-                    email = user.email,
-                    fullName = user.fullName,
-                    username = user.username,
-                    birthday = user.birthday,
-                    agreedToPolicy = user.agreedToPolicy,
-                    profilePicPath = user.profilePicPath
-                )
-            }
-
-        call.respond(HttpStatusCode.OK, commentors)
-    }
-}
-
 fun Route.likePost(
     postDataSource: PostDataSource,
     userDataSource: UserDataSource

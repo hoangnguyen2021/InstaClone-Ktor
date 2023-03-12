@@ -44,7 +44,6 @@ fun Application.configureRouting(
                 createPost(postDataSource, userDataSource)
                 getPostsByUserId(postDataSource, userDataSource, commentDataSource, replyCommentDataSource)
                 getPostById(postDataSource, userDataSource, commentDataSource, replyCommentDataSource)
-                getCommentorsByPostId(postDataSource, userDataSource, commentDataSource)
                 likePost(postDataSource, userDataSource)
                 unlikePost(postDataSource, userDataSource)
                 commentOnPost(postDataSource, userDataSource, commentDataSource)
