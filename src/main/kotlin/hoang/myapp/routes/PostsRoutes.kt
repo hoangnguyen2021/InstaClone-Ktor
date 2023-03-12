@@ -2,7 +2,6 @@ package hoang.myapp.routes
 
 import hoang.myapp.data.comments.*
 import hoang.myapp.data.posts.*
-import hoang.myapp.data.user.InstaCloneUser2
 import hoang.myapp.data.user.UserDataSource
 import hoang.myapp.data.user.toInstaCloneUser2
 import io.ktor.http.*
@@ -68,6 +67,7 @@ fun Route.getPostsByUserId(
         val response =
             posts.map { post ->
                 post.toInstaClonePost2(
+                    author.toInstaCloneUser2(),
                     commentDataSource
                         .findCommentsByIds(post.comments)
                         .map { comment ->
@@ -114,6 +114,7 @@ fun Route.getPostById(
         val comments = commentDataSource.findCommentsByIds(post.comments)
         val response =
             post.toInstaClonePost2(
+                userDataSource.findUserById(post.authorId.toString())!!.toInstaCloneUser2(),
                 comments.map { comment ->
                     comment.toComment2(
                         userDataSource
