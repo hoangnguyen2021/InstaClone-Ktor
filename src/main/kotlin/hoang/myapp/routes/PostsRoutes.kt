@@ -70,6 +70,7 @@ fun Route.getPostsByUserId(
                     author = author.toInstaCloneUser2(),
                     comments = commentDataSource
                         .findCommentsByIds(post.comments)
+                        .sortedByDescending { it.createdAt }
                         .map { comment ->
                             comment.toComment2(
                                 author = userDataSource
@@ -77,6 +78,7 @@ fun Route.getPostsByUserId(
                                     .toInstaCloneUser2(),
                                 replies = replyCommentDataSource
                                     .findReplyCommentsByIds(comment.replies)
+                                    .sortedByDescending { it.createdAt }
                                     .map { replyComment ->
                                         replyComment.toReplyComment2(
                                             author = userDataSource
@@ -111,26 +113,29 @@ fun Route.getPostById(
             call.respond(HttpStatusCode.BadRequest, "Post not found with the given id")
             return@get
         }
-        val comments = commentDataSource.findCommentsByIds(post.comments)
         val response =
             post.toInstaClonePost2(
                 author = userDataSource.findUserById(post.authorId.toString())!!.toInstaCloneUser2(),
-                comments = comments.map { comment ->
-                    comment.toComment2(
-                        author = userDataSource
-                            .findUserById(comment.authorId.toString())!!
-                            .toInstaCloneUser2(),
-                        replies = replyCommentDataSource
-                            .findReplyCommentsByIds(comment.replies)
-                            .map { replyComment ->
-                                replyComment.toReplyComment2(
-                                    author = userDataSource
-                                        .findUserById(replyComment.authorId.toString())!!
-                                        .toInstaCloneUser2()
-                                )
-                            }
-                    )
-                }
+                comments = commentDataSource
+                    .findCommentsByIds(post.comments)
+                    .sortedByDescending { it.createdAt }
+                    .map { comment ->
+                        comment.toComment2(
+                            author = userDataSource
+                                .findUserById(comment.authorId.toString())!!
+                                .toInstaCloneUser2(),
+                            replies = replyCommentDataSource
+                                .findReplyCommentsByIds(comment.replies)
+                                .sortedByDescending { it.createdAt }
+                                .map { replyComment ->
+                                    replyComment.toReplyComment2(
+                                        author = userDataSource
+                                            .findUserById(replyComment.authorId.toString())!!
+                                            .toInstaCloneUser2()
+                                    )
+                                }
+                        )
+                    }
             )
 
         call.respond(HttpStatusCode.OK, response)
