@@ -26,14 +26,6 @@ class MongoUserDataSource(
         return users.findOne(InstaCloneUser::email / Email::email eq email)
     }
 
-    override suspend fun findUsersByIds(ids: List<Id<InstaCloneUser>>): List<InstaCloneUser> {
-        val result = mutableListOf<InstaCloneUser>()
-        ids.forEach { id ->
-            users.findOneById(id)?.let { result.add(it) }
-        }
-        return result
-    }
-
     override suspend fun insertUser(instaCloneUser: InstaCloneUser): Boolean {
         return users.insertOne(instaCloneUser).wasAcknowledged()
     }

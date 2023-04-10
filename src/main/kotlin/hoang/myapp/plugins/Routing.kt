@@ -30,7 +30,7 @@ fun Application.configureRouting(
             sendVerificationCode(twilioVerificationService, sendinBlueTransactionalEmailService)
             checkVerificationCode(twilioVerificationService, sendinBlueTransactionalEmailService)
             signUp(hashingService, userDataSource)
-            signIn(hashingService, userDataSource, tokenService, tokenConfig)
+            logIn(hashingService, userDataSource, tokenService, tokenConfig)
             authenticate()
             getSecretInfo()
         }

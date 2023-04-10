@@ -99,7 +99,7 @@ fun Route.signUp(
     }
 }
 
-fun Route.signIn(
+fun Route.logIn(
     hashingService: HashingService,
     userDataSource: UserDataSource,
     tokenService: TokenService,
@@ -151,7 +151,9 @@ fun Route.signIn(
                 fullName = user.fullName,
                 birthday = user.birthday,
                 agreedToPolicy = user.agreedToPolicy,
-                profilePicPath = user.profilePicPath
+                profilePicPath = user.profilePicPath,
+                followers = user.followers,
+                following = user.following
             )
         )
     }

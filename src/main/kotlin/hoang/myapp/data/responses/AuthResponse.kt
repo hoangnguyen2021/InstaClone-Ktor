@@ -18,5 +18,7 @@ data class AuthResponse(
     val fullName: String,
     val birthday: LocalDate,
     val agreedToPolicy: Boolean,
-    val profilePicPath: String? = null
+    val profilePicPath: String? = null,
+    val followers: List<String> = emptyList(),
+    val following: List<String> = emptyList()
 )
