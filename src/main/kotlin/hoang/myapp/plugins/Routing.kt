@@ -35,7 +35,7 @@ fun Application.configureRouting(
             getSecretInfo()
         }
         route("/media") {
-            route("/profile-pic") {
+            route("/profile-pics") {
                 uploadProfilePic(storageService)
                 getProfilePic(storageService)
             }
