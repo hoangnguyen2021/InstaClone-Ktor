@@ -14,8 +14,6 @@ import hoang.myapp.security.token.TokenConfig
 import hoang.myapp.security.token.TokenService
 import hoang.myapp.security.verification.VerificationService
 import hoang.myapp.storage.StorageService
-import io.ktor.http.*
-import io.ktor.server.resources.*
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
 import org.koin.ktor.ext.inject
