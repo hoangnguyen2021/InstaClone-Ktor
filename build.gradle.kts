@@ -16,10 +16,10 @@ val awsKotlinVersion: String by project
 val password4jVersion: String by project
 
 plugins {
-    kotlin("jvm") version "1.7.22"
-    id("io.ktor.plugin") version "2.2.1"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.22"
-    id("com.google.devtools.ksp") version "1.7.22-1.0.8"
+    kotlin("jvm") version "1.9.23"
+    id("io.ktor.plugin") version "2.3.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.23"
+    id("com.google.devtools.ksp") version "1.9.23-1.0.20"
 }
 
 group = "hoang.myapp"
@@ -64,8 +64,9 @@ dependencies {
     implementation("commons-codec:commons-codec:$commonsCodecVersion")
 
     // Koin
-    implementation("io.insert-koin:koin-ktor:$koinKtorVersion")
-    implementation("io.insert-koin:koin-logger-slf4j:$koinKtorVersion")
+    implementation(platform("io.insert-koin:koin-bom:$koinKtorVersion"))
+    implementation("io.insert-koin:koin-ktor")
+    implementation("io.insert-koin:koin-logger-slf4j")
     implementation("io.insert-koin:koin-annotations:$koinAnnotationsVersion")
     ksp("io.insert-koin:koin-ksp-compiler:$koinAnnotationsVersion")
 
